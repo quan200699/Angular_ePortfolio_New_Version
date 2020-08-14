@@ -62,7 +62,8 @@ export class PortfolioComponent implements OnInit {
     let content = [
       this.buildPortfolioTitle('BOOTCAMP JAVA'),
       this.buildPortfolioDescription(),
-      this.buildPortfolioInfo()
+      this.buildPortfolioInfo(),
+      this.buildPortfolioGeneralAssessment()
     ];
     return content;
   };
@@ -154,4 +155,57 @@ export class PortfolioComponent implements OnInit {
       margin: [30, 0, 0, 30]
     }
   ];
+
+  private buildPortfolioGeneralAssessment = () => {
+    const date = new Date();
+    return [
+      {
+        text: '\nI. ĐÁNH GIÁ CHUNG\n' +
+          '1. Mức độ đánh giá (3)\n',
+        fontSize: 12,
+        bold: true,
+        margin: [0, 0, 0, 30]
+      },
+      {
+        text: '\n2. Nhận xét chung\n',
+        fontSize: 12,
+        bold: true
+      },
+      {
+        text: 'Điểm mạnh:\n',
+        fontSize: 12,
+        italic: true,
+      },
+      {
+        text: 'Điểm yếu:\n',
+        fontSize: 12,
+        italic: true,
+        margin: [0, 0, 0, 10]
+      },
+      {
+        text: 'Gợi ý cho doanh nghiệp:\n',
+        fontSize: 12,
+        margin: [0, 0, 0, 70]
+      },
+      {
+        text: '\nHà Nội, ngày ' + date.getUTCDate() + ' tháng ' + (date.getMonth() + 1) + ' năm ' + date.getUTCFullYear(),
+        alignment: 'right',
+        fontSize: 12,
+      },
+      {
+        text: '\nHuấn luyện viên',
+        alignment: 'right',
+        fontSize: 12,
+        margin: [0, 0, 40, 20],
+      },
+      {
+        text: 'NGUYỄN MINH QUÂN',
+        alignment: 'right',
+        bold: true,
+        fontSize: 12,
+        margin: [0, 50, 30, 20],
+        pageBreak: 'after'
+      }
+    ];
+  };
 }
