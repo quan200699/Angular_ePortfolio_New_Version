@@ -59,7 +59,10 @@ export class PortfolioComponent implements OnInit {
   ];
 
   private buildPortfolioContent = () => {
-    let content = this.buildTitle();
+    let content = [
+      this.buildTitle(),
+      this.buildPortfolioInfo()
+    ];
     return content;
   };
 
@@ -109,4 +112,41 @@ export class PortfolioComponent implements OnInit {
     alignment: 'left',
     margin: [30, 0, 0, 30]
   }];
+
+  private buildPortfolioInfo = () => ({
+    columns: [
+      [
+        {
+          text: 'Huấn luyện viên: ',
+          fontSize: 12,
+          bold: true,
+          margin: [0, 0, 0, 5]
+        },
+        {
+          text: 'Học viên: ',
+          fontSize: 12,
+          bold: true,
+          margin: [0, 0, 0, 5]
+        },
+        {
+          text: 'Mã học viên: ',
+          fontSize: 12,
+          bold: true,
+          margin: [0, 0, 0, 5]
+        },
+        {
+          text: 'Lớp: ',
+          fontSize: 12,
+          bold: true,
+          margin: [0, 0, 0, 5]
+        },
+        {
+          text: 'Chương trình học: ',
+          fontSize: 12,
+          bold: true,
+          margin: [0, 0, 0, 5]
+        }
+      ]
+    ]
+  });
 }
