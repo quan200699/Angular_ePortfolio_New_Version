@@ -61,6 +61,7 @@ export class PortfolioComponent implements OnInit {
   private buildPortfolioContent = () => {
     let content = [
       this.buildTitle(),
+      this.buildPortfolioDescription(),
       this.buildPortfolioInfo()
     ];
     return content;
@@ -87,7 +88,7 @@ export class PortfolioComponent implements OnInit {
     ]
   });
 
-  private buildTitle = () => [{
+  private buildTitle = () => ({
     text: 'BOOTCAMP JAVA\n' +
       'ĐÁNH GIÁ NĂNG LỰC\n',
     bold: true,
@@ -95,23 +96,7 @@ export class PortfolioComponent implements OnInit {
     alignment: 'center',
     color: '#090e91',
     margin: [0, 0, 0, 5]
-  }, {
-    text: '(Dành cho Huấn luyện viên)\n' +
-      '\n' +
-      'Huấn luyện viên sử dụng Rubric đánh giá năng lực dựa trên các hạng mục sau:\n',
-    bold: true,
-    italics: true,
-    fontSize: 12,
-    alignment: 'center',
-    margin: [0, 0, 0, 5]
-  }, {
-    text: '1.\tKết quả bài thi lý thuyết và thực hành cuối module của học viên\n' +
-      '2.\tQuá trình học của học viên: bài tập, bài thực hành, quiz,…\n',
-    italics: true,
-    fontSize: 11,
-    alignment: 'left',
-    margin: [30, 0, 0, 30]
-  }];
+  });
 
   private buildPortfolioInfo = () => ({
     columns: [
@@ -149,4 +134,24 @@ export class PortfolioComponent implements OnInit {
       ]
     ]
   });
+
+  private buildPortfolioDescription = () => [
+    {
+      text: '(Dành cho Huấn luyện viên)\n' +
+        '\n' +
+        'Huấn luyện viên sử dụng Rubric đánh giá năng lực dựa trên các hạng mục sau:\n',
+      bold: true,
+      italics: true,
+      fontSize: 12,
+      alignment: 'center',
+      margin: [0, 0, 0, 5]
+    }, {
+      text: '1.\tKết quả bài thi lý thuyết và thực hành cuối module của học viên\n' +
+        '2.\tQuá trình học của học viên: bài tập, bài thực hành, quiz,…\n',
+      italics: true,
+      fontSize: 11,
+      alignment: 'left',
+      margin: [30, 0, 0, 30]
+    }
+  ];
 }
