@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import * as pdfMakeConfig from 'pdfmake/build/pdfmake.js';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
 import * as pdfMake from 'pdfmake/build/pdfmake';
+import {OnlineCourse} from '../interface/online-course';
 
 pdfMakeConfig.vfs = pdfFonts.pdfMake.vfs;
 
@@ -11,6 +12,19 @@ pdfMakeConfig.vfs = pdfFonts.pdfMake.vfs;
   styleUrls: ['./portfolio.component.css']
 })
 export class PortfolioComponent implements OnInit {
+  onlineCourses: OnlineCourse[] = [
+    {
+      id: 1,
+      content: 'Học cách học'
+    },
+    {
+      id: 2,
+      content: 'Hoàn thành mọi việc với Kanban'
+    },
+    {
+      id: 3,
+      content: 'Scrum Essence'
+    }];
 
   constructor() {
   }
@@ -255,66 +269,30 @@ export class PortfolioComponent implements OnInit {
             bold: true
           }
         ],
-        [
+        ...this.onlineCourses.map(onlineCourse => {
           {
-            text: '1',
-            alignment: 'center',
-            fontSize: 12,
-            bold: true
-          },
-          {
-            text: 'Học cách học',
-            alignment: 'left',
-            fontSize: 12,
-            bold: true
-          },
-          {
-            text: '',
-            alignment: 'left',
-            fontSize: 12,
-            bold: true
+            return [
+              {
+                text: onlineCourse.id,
+                alignment: 'center',
+                fontSize: 12,
+                bold: true
+              },
+              {
+                text: onlineCourse.content,
+                alignment: 'left',
+                fontSize: 12,
+                bold: true
+              },
+              {
+                text: '',
+                alignment: 'left',
+                fontSize: 12,
+                bold: true
+              }
+            ];
           }
-        ],
-        [
-          {
-            text: '2',
-            alignment: 'center',
-            fontSize: 12,
-            bold: true
-          },
-          {
-            text: 'Hoàn thành mọi việc với Kanban',
-            alignment: 'left',
-            fontSize: 12,
-            bold: true
-          },
-          {
-            text: '',
-            alignment: 'left',
-            fontSize: 12,
-            bold: true
-          }
-        ],
-        [
-          {
-            text: '3',
-            alignment: 'center',
-            fontSize: 12,
-            bold: true
-          },
-          {
-            text: 'Scrum Essence',
-            alignment: 'left',
-            fontSize: 12,
-            bold: true
-          },
-          {
-            text: '',
-            alignment: 'left',
-            fontSize: 12,
-            bold: true
-          }
-        ]
+        })
       ]
     }
   });
