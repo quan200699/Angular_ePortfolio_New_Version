@@ -209,8 +209,10 @@ export class PortfolioComponent implements OnInit {
     ];
   };
 
-  private buildPortfolioDetail = () => (
-    this.buildPortfolioDetailedAssessment()
+  private buildPortfolioDetail = () => ([
+      this.buildPortfolioDetailedAssessment(),
+      this.buildPortfolioOutcome()
+    ]
   );
 
   private buildPortfolioDetailedAssessment = () => ({
@@ -220,4 +222,6 @@ export class PortfolioComponent implements OnInit {
     bold: true,
     margin: [0, 0, 0, 20]
   });
+
+  private buildPortfolioOutcome = () => '';
 }
