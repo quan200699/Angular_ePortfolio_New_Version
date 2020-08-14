@@ -38,7 +38,7 @@ export class PortfolioComponent implements OnInit {
 
   private getDocumentDefinition() {
     return {
-      pageMargins: [70, 120, 70, 60],
+      pageMargins: [70, 120, 40, 60],
       header: this.buildPortfolioHeader(),
       content: this.buildPortfolioContent(),
       footer: this.buildPortfolioFooter()
@@ -211,7 +211,8 @@ export class PortfolioComponent implements OnInit {
 
   private buildPortfolioDetail = () => ([
       this.buildPortfolioDetailedAssessment(),
-      this.buildPortfolioOutcome()
+      this.buildPortfolioOutcome(),
+      this.buildPortfolioOnlineCourse()
     ]
   );
 
@@ -224,4 +225,97 @@ export class PortfolioComponent implements OnInit {
   });
 
   private buildPortfolioOutcome = () => '';
+
+  private buildPortfolioOnlineCourse = () => ({
+    table: {
+      width: [40, '*', 'auto'],
+      height: [20],
+      body: [
+        [
+          {
+            text: 'STT',
+            style: 'tableHeader',
+            alignment: 'center',
+            fontSize: 12,
+            bold: true
+          },
+          {
+            text: 'Khóa học',
+            style: 'tableHeader',
+            alignment: 'center',
+            fontSize: 12,
+            bold: true
+          },
+          {
+            text: 'Đánh giá\n' +
+              '(Đã có chứng chỉ hoàn thành, Chưa có chứng\n chỉ hoàn thành)\n',
+            style: 'tableHeader',
+            alignment: 'center',
+            fontSize: 12,
+            bold: true
+          }
+        ],
+        [
+          {
+            text: '1',
+            alignment: 'center',
+            fontSize: 12,
+            bold: true
+          },
+          {
+            text: 'Học cách học',
+            alignment: 'left',
+            fontSize: 12,
+            bold: true
+          },
+          {
+            text: '',
+            alignment: 'left',
+            fontSize: 12,
+            bold: true
+          }
+        ],
+        [
+          {
+            text: '2',
+            alignment: 'center',
+            fontSize: 12,
+            bold: true
+          },
+          {
+            text: 'Hoàn thành mọi việc với Kanban',
+            alignment: 'left',
+            fontSize: 12,
+            bold: true
+          },
+          {
+            text: '',
+            alignment: 'left',
+            fontSize: 12,
+            bold: true
+          }
+        ],
+        [
+          {
+            text: '3',
+            alignment: 'center',
+            fontSize: 12,
+            bold: true
+          },
+          {
+            text: 'Scrum Essence',
+            alignment: 'left',
+            fontSize: 12,
+            bold: true
+          },
+          {
+            text: '',
+            alignment: 'left',
+            fontSize: 12,
+            bold: true
+          }
+        ]
+      ]
+    }
+  });
 }
