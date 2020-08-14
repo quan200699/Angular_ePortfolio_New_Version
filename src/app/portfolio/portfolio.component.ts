@@ -63,7 +63,8 @@ export class PortfolioComponent implements OnInit {
       this.buildPortfolioTitle('BOOTCAMP JAVA'),
       this.buildPortfolioDescription(),
       this.buildPortfolioInfo(),
-      this.buildPortfolioGeneralAssessment()
+      this.buildPortfolioGeneralAssessment(),
+      this.buildPortfolioDetail()
     ];
   };
 
@@ -207,4 +208,12 @@ export class PortfolioComponent implements OnInit {
       }
     ];
   };
+
+  private buildPortfolioDetail = () => ({
+    text: 'II. CHI TIẾT\n' +
+      '1/ ĐÁNH GIÁ CHI TIẾT \n',
+    fontSize: 12,
+    bold: true,
+    margin: [0, 0, 0, 20]
+  });
 }
