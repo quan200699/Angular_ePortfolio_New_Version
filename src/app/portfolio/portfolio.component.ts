@@ -209,7 +209,11 @@ export class PortfolioComponent implements OnInit {
     ];
   };
 
-  private buildPortfolioDetail = () => ({
+  private buildPortfolioDetail = () => (
+    this.buildPortfolioDetailedAssessment()
+  );
+
+  private buildPortfolioDetailedAssessment = () => ({
     text: 'II. CHI TIẾT\n' +
       '1/ ĐÁNH GIÁ CHI TIẾT \n',
     fontSize: 12,
