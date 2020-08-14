@@ -59,13 +59,12 @@ export class PortfolioComponent implements OnInit {
   ];
 
   private buildPortfolioContent = () => {
-    let content = [
+    return [
       this.buildPortfolioTitle('BOOTCAMP JAVA'),
       this.buildPortfolioDescription(),
       this.buildPortfolioInfo(),
       this.buildPortfolioGeneralAssessment()
     ];
-    return content;
   };
 
   private buildPortfolioFooter = () => ({
@@ -193,7 +192,7 @@ export class PortfolioComponent implements OnInit {
         fontSize: 12,
       },
       {
-        text: '\nHuấn luyện viên',
+        text: '\nHUẤN LUYỆN VIÊN',
         alignment: 'right',
         fontSize: 12,
         margin: [0, 0, 40, 20],
