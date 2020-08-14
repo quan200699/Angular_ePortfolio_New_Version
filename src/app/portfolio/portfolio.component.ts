@@ -60,7 +60,7 @@ export class PortfolioComponent implements OnInit {
 
   private buildPortfolioContent = () => {
     let content = [
-      this.buildTitle(),
+      this.buildPortfolioTitle('BOOTCAMP JAVA'),
       this.buildPortfolioDescription(),
       this.buildPortfolioInfo()
     ];
@@ -88,8 +88,8 @@ export class PortfolioComponent implements OnInit {
     ]
   });
 
-  private buildTitle = () => ({
-    text: 'BOOTCAMP JAVA\n' +
+  private buildPortfolioTitle = (title) => ({
+    text: title + '\n' +
       'ĐÁNH GIÁ NĂNG LỰC\n',
     bold: true,
     fontSize: 24,
