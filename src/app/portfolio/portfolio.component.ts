@@ -366,6 +366,13 @@ export class PortfolioComponent implements OnInit {
         bold: true
       },
       this.buildPortfolioOutcomeNote(),
+      {
+        text: '(3) Mức đánh giá năng lực khi kết thúc cả chương trình',
+        fontSize: 12,
+        margin: [0, 5, 0, 5],
+        bold: true
+      },
+      this.buildPortfolioStudentLevelAfterGraduating()
     ];
   }
 
@@ -374,7 +381,7 @@ export class PortfolioComponent implements OnInit {
       {
         text: [
           {
-            text: 'Chưa đạt:',
+            text: 'Chưa đạt: ',
             bold: true
           },
           'Học viên chưa có đủ khả năng để giải quyết các vấn đề liên quan đến năng lực đang được đánh giá.'
@@ -384,7 +391,7 @@ export class PortfolioComponent implements OnInit {
       {
         text: [
           {
-            text: 'Đạt:',
+            text: 'Đạt: ',
             bold: true
           },
           'Học viên có đủ khả năng để giải quyết các vấn đề đơn giản liên quan đến năng lực đang được đánh giá, tuy nhiên chưa đủ năng lực để giải quyết các vấn đề phức tạp hơn hoặc giải quyết các vấn đề một cách hiệu quả, nhanh chóng'
@@ -394,7 +401,7 @@ export class PortfolioComponent implements OnInit {
       {
         text: [
           {
-            text: 'Tốt:',
+            text: 'Tốt: ',
             bold: true
           },
           'Học viên có đủ khả năng để giải quyết phần lớn các vấn đề liên quan đến năng lực đang được đánh giá với một mức độ hiệu quả và thời gian chấp nhận được.'
@@ -404,7 +411,7 @@ export class PortfolioComponent implements OnInit {
       {
         text: [
           {
-            text: 'Xuất sắc:',
+            text: 'Xuất sắc: ',
             bold: true
           },
           'Học viên có đủ khả năng để giải quyết hầu hết tất cả các vấn đề liên quan đến năng lực đang được đánh giá với mức độ hiệu quả cao trong một khoảng thời gian nhanh chóng.'
@@ -426,6 +433,51 @@ export class PortfolioComponent implements OnInit {
       },
       {
         text: 'Các chuẩn đầu ra đánh dấu 2 sao (**) là dành cho các học viên có năng lực rất khá, có thể dành thêm nhiều thời gian để luyện tập mở rộng.',
+        margin: [0, 5, 0, 0]
+      }
+    ]
+  });
+
+  private buildPortfolioStudentLevelAfterGraduating= () => ({
+    ul: [
+      {
+        text: [
+          {
+            text: 'Chưa đạt: ',
+            bold: true
+          },
+          'Không đạt được 100% năng lực bắt buộc.'
+        ],
+        margin: [0, 5, 0, 0]
+      },
+      {
+        text: [
+          {
+            text: 'Đạt: ',
+            bold: true
+          },
+          '100% năng lực bắt buộc.'
+        ],
+        margin: [0, 5, 0, 0]
+      },
+      {
+        text: [
+          {
+            text: 'Tốt: ',
+            bold: true
+          },
+          '100% năng lực bắt buộc và >= 80% năng lực 1 sao (*).'
+        ],
+        margin: [0, 5, 0, 0]
+      },
+      {
+        text: [
+          {
+            text: 'Xuất sắc: ',
+            bold: true
+          },
+          '100% năng lực bắt buộc và 100% năng lực 1 sao và >= 80% năng lực 2 sao (**).'
+        ],
         margin: [0, 5, 0, 0]
       }
     ]
