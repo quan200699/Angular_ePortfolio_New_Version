@@ -358,11 +358,11 @@ export class PortfolioComponent implements OnInit {
         fontSize: 12,
         bold: true
       },
-      this.buildPortfolioOutcomeNote()
+      this.buildPortfolioOutcomeNoteLevel()
     ];
   }
 
-  private buildPortfolioOutcomeNote = () => ({
+  private buildPortfolioOutcomeNoteLevel = () => ({
     ul: [
       {
         text: [
