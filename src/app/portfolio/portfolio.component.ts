@@ -52,7 +52,7 @@ export class PortfolioComponent implements OnInit {
 
   private getDocumentDefinition() {
     return {
-      pageMargins: [70, 120, 40, 60],
+      pageMargins: [70, 120, 65, 60],
       header: this.buildPortfolioHeader(),
       content: this.buildPortfolioContent(),
       footer: this.buildPortfolioFooter()
@@ -386,7 +386,7 @@ export class PortfolioComponent implements OnInit {
           },
           'Học viên chưa có đủ khả năng để giải quyết các vấn đề liên quan đến năng lực đang được đánh giá.'
         ],
-        margin: [0, 5, 0, 0]
+        margin: [25, 5, 0, 0]
       },
       {
         text: [
@@ -396,7 +396,7 @@ export class PortfolioComponent implements OnInit {
           },
           'Học viên có đủ khả năng để giải quyết các vấn đề đơn giản liên quan đến năng lực đang được đánh giá, tuy nhiên chưa đủ năng lực để giải quyết các vấn đề phức tạp hơn hoặc giải quyết các vấn đề một cách hiệu quả, nhanh chóng'
         ],
-        margin: [0, 5, 0, 0]
+        margin: [25, 5, 0, 0]
       },
       {
         text: [
@@ -406,7 +406,7 @@ export class PortfolioComponent implements OnInit {
           },
           'Học viên có đủ khả năng để giải quyết phần lớn các vấn đề liên quan đến năng lực đang được đánh giá với một mức độ hiệu quả và thời gian chấp nhận được.'
         ],
-        margin: [0, 5, 0, 0]
+        margin: [25, 5, 0, 0]
       },
       {
         text: [
@@ -416,7 +416,7 @@ export class PortfolioComponent implements OnInit {
           },
           'Học viên có đủ khả năng để giải quyết hầu hết tất cả các vấn đề liên quan đến năng lực đang được đánh giá với mức độ hiệu quả cao trong một khoảng thời gian nhanh chóng.'
         ],
-        margin: [0, 5, 0, 0]
+        margin: [25, 5, 0, 0]
       }
     ]
   });
@@ -425,15 +425,15 @@ export class PortfolioComponent implements OnInit {
     ul: [
       {
         text: 'Các chuẩn đầu ra không đánh dấu sao là các chuẩn đầu ra mức cơ bản, bắt buộc dành cho tất cả các học viên.',
-        margin: [0, 5, 0, 0]
+        margin: [25, 5, 0, 0]
       },
       {
         text: 'Các chuẩn đầu ra đánh dấu 1 sao (*) là dành cho các học viên có năng lực khá, có thể dành thêm thời để luyện tập mở rộng.',
-        margin: [0, 5, 0, 0]
+        margin: [25, 5, 0, 0]
       },
       {
         text: 'Các chuẩn đầu ra đánh dấu 2 sao (**) là dành cho các học viên có năng lực rất khá, có thể dành thêm nhiều thời gian để luyện tập mở rộng.',
-        margin: [0, 5, 0, 0]
+        margin: [25, 5, 0, 0]
       }
     ]
   });
@@ -448,7 +448,7 @@ export class PortfolioComponent implements OnInit {
           },
           'Không đạt được 100% năng lực bắt buộc.'
         ],
-        margin: [0, 5, 0, 0]
+        margin: [25, 5, 0, 0]
       },
       {
         text: [
@@ -458,7 +458,7 @@ export class PortfolioComponent implements OnInit {
           },
           '100% năng lực bắt buộc.'
         ],
-        margin: [0, 5, 0, 0]
+        margin: [25, 5, 0, 0]
       },
       {
         text: [
@@ -468,7 +468,7 @@ export class PortfolioComponent implements OnInit {
           },
           '100% năng lực bắt buộc và >= 80% năng lực 1 sao (*).'
         ],
-        margin: [0, 5, 0, 0]
+        margin: [25, 5, 0, 0]
       },
       {
         text: [
@@ -478,7 +478,7 @@ export class PortfolioComponent implements OnInit {
           },
           '100% năng lực bắt buộc và 100% năng lực 1 sao và >= 80% năng lực 2 sao (**).'
         ],
-        margin: [0, 5, 0, 0]
+        margin: [25, 5, 0, 0]
       }
     ]
   });
