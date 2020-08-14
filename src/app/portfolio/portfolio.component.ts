@@ -40,6 +40,7 @@ export class PortfolioComponent implements OnInit {
     return {
       pageMargins: [70, 120, 70, 60],
       header: this.buildPortfolioHeader(),
+      content: this.buildPortfolioContent(),
       footer: this.buildPortfolioFooter()
     };
   }
@@ -56,6 +57,11 @@ export class PortfolioComponent implements OnInit {
       margin: [20, 0, 0, 0],
     }
   ];
+
+  private buildPortfolioContent = () => {
+    let content = this.buildTitle();
+    return content;
+  };
 
   private buildPortfolioFooter = () => ({
     columns: [
@@ -76,5 +82,15 @@ export class PortfolioComponent implements OnInit {
         margin: [25, 0, 0, 0],
       }
     ]
+  });
+
+  private buildTitle = () => ({
+    text: 'BOOTCAMP JAVA\n' +
+      'ĐÁNH GIÁ NĂNG LỰC\n',
+    bold: true,
+    fontSize: 24,
+    alignment: 'center',
+    color: '#090e91',
+    margin: [0, 0, 0, 5]
   });
 }
