@@ -228,7 +228,8 @@ export class PortfolioComponent implements OnInit {
       this.buildPortfolioOutcome(),
       this.buildPortfolioOnlineCourse(),
       this.buildPortfolioAddendum(),
-      this.buildPortfolioProductTable()
+      this.buildPortfolioProductTable(),
+      this.buildPortfolioNote()
     ]
   );
 
@@ -342,5 +343,67 @@ export class PortfolioComponent implements OnInit {
         ]
       ]
     }
+  });
+
+  private buildPortfolioNote() {
+    return [
+      {
+        text: 'Chú thích:',
+        fontSize: 12,
+        bold: true,
+        margin: [0, 20, 0, 0]
+      },
+      {
+        text: '(1) Mức độ đánh giá chuẩn đầu ra',
+        fontSize: 12,
+        bold: true
+      },
+      this.buildPortfolioOutcomeNote()
+    ];
+  }
+
+  private buildPortfolioOutcomeNote = () => ({
+    ul: [
+      {
+        text: [
+          {
+            text: 'Chưa đạt:',
+            bold: true
+          },
+          'Học viên chưa có đủ khả năng để giải quyết các vấn đề liên quan đến năng lực đang được đánh giá.'
+        ],
+        margin: [0, 5, 0, 0]
+      },
+      {
+        text: [
+          {
+            text: 'Đạt:',
+            bold: true
+          },
+          'Học viên có đủ khả năng để giải quyết các vấn đề đơn giản liên quan đến năng lực đang được đánh giá, tuy nhiên chưa đủ năng lực để giải quyết các vấn đề phức tạp hơn hoặc giải quyết các vấn đề một cách hiệu quả, nhanh chóng'
+        ],
+        margin: [0, 5, 0, 0]
+      },
+      {
+        text: [
+          {
+            text: 'Tốt:',
+            bold: true
+          },
+          'Học viên có đủ khả năng để giải quyết phần lớn các vấn đề liên quan đến năng lực đang được đánh giá với một mức độ hiệu quả và thời gian chấp nhận được.'
+        ],
+        margin: [0, 5, 0, 0]
+      },
+      {
+        text: [
+          {
+            text: 'Xuất sắc:',
+            bold: true
+          },
+          'Học viên có đủ khả năng để giải quyết hầu hết tất cả các vấn đề liên quan đến năng lực đang được đánh giá với mức độ hiệu quả cao trong một khoảng thời gian nhanh chóng.'
+        ],
+        margin: [0, 5, 0, 0]
+      }
+    ]
   });
 }
