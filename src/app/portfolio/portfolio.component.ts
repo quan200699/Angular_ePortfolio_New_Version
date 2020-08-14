@@ -358,7 +358,14 @@ export class PortfolioComponent implements OnInit {
         fontSize: 12,
         bold: true
       },
-      this.buildPortfolioOutcomeNoteLevel()
+      this.buildPortfolioOutcomeNoteLevel(),
+      {
+        text: '(2) Chuẩn đầu ra',
+        fontSize: 12,
+        margin: [0, 5, 0, 5],
+        bold: true
+      },
+      this.buildPortfolioOutcomeNote(),
     ];
   }
 
@@ -402,6 +409,23 @@ export class PortfolioComponent implements OnInit {
           },
           'Học viên có đủ khả năng để giải quyết hầu hết tất cả các vấn đề liên quan đến năng lực đang được đánh giá với mức độ hiệu quả cao trong một khoảng thời gian nhanh chóng.'
         ],
+        margin: [0, 5, 0, 0]
+      }
+    ]
+  });
+
+  private buildPortfolioOutcomeNote = () => ({
+    ul: [
+      {
+        text: 'Các chuẩn đầu ra không đánh dấu sao là các chuẩn đầu ra mức cơ bản, bắt buộc dành cho tất cả các học viên.',
+        margin: [0, 5, 0, 0]
+      },
+      {
+        text: 'Các chuẩn đầu ra đánh dấu 1 sao (*) là dành cho các học viên có năng lực khá, có thể dành thêm thời để luyện tập mở rộng.',
+        margin: [0, 5, 0, 0]
+      },
+      {
+        text: 'Các chuẩn đầu ra đánh dấu 2 sao (**) là dành cho các học viên có năng lực rất khá, có thể dành thêm nhiều thời gian để luyện tập mở rộng.',
         margin: [0, 5, 0, 0]
       }
     ]
