@@ -227,7 +227,8 @@ export class PortfolioComponent implements OnInit {
       this.buildPortfolioDetailedAssessment(),
       this.buildPortfolioOutcome(),
       this.buildPortfolioOnlineCourse(),
-      this.buildPortfolioAddendum()
+      this.buildPortfolioAddendum(),
+      this.buildPortfolioProductTable()
     ]
   );
 
@@ -243,19 +244,18 @@ export class PortfolioComponent implements OnInit {
 
   private buildPortfolioOnlineCourse = () => ({
     table: {
-      width: [40, '*', 'auto'],
-      height: [20],
+      widths: [40, '*', 'auto'],
       body: [
         [
           {
-            text: 'STT',
+            text: '\nSTT',
             style: 'tableHeader',
             alignment: 'center',
             fontSize: 12,
             bold: true
           },
           {
-            text: 'Khóa học',
+            text: '\nKhóa học',
             style: 'tableHeader',
             alignment: 'center',
             fontSize: 12,
@@ -303,5 +303,44 @@ export class PortfolioComponent implements OnInit {
     fontSize: 12,
     bold: true,
     margin: [0, 20, 0, 0]
+  });
+
+  private buildPortfolioProductTable = () => ({
+    table: {
+      widths: ['auto', '*', 200, 60],
+      heights: [10],
+      body: [
+        [
+          {
+            text: '#',
+            style: 'tableHeader',
+            alignment: 'center',
+            fontSize: 12,
+            bold: true
+          },
+          {
+            text: 'Sản phẩm',
+            style: 'tableHeader',
+            alignment: 'center',
+            fontSize: 12,
+            bold: true
+          },
+          {
+            text: 'Link',
+            style: 'tableHeader',
+            alignment: 'center',
+            fontSize: 12,
+            bold: true
+          },
+          {
+            text: 'Ghi chú',
+            style: 'tableHeader',
+            alignment: 'center',
+            fontSize: 12,
+            bold: true
+          }
+        ]
+      ]
+    }
   });
 }
