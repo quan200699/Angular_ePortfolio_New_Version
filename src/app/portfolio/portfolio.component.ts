@@ -39,7 +39,8 @@ export class PortfolioComponent implements OnInit {
   private getDocumentDefinition() {
     return {
       pageMargins: [70, 120, 70, 60],
-      header: this.buildPortfolioHeader()
+      header: this.buildPortfolioHeader(),
+      footer: this.buildPortfolioFooter()
     };
   }
 
@@ -55,4 +56,25 @@ export class PortfolioComponent implements OnInit {
       margin: [20, 0, 0, 0],
     }
   ];
+
+  private buildPortfolioFooter = () => ({
+    columns: [
+      {
+        image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIgAAAACCAIAAAAM8wO7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAbSURBVDhPY9DQaBhFgw39//9/NGIGI/r//z8AUtfhW6CNZKoAAAAASUVORK5CYII=',
+        width: 136,
+        height: 2,
+        margin: [0, 5, 0, 0],
+      },
+      {
+        image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAIAAACQKrqGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIXSURBVChTRVJtT1JhGD5/S7P1IfGA5KzVCMycrflSP6FWVh/Shn0QQUU4vCgckPdaAuIwCDgoINRsAzcQRY8cOQc2/M6pi2Tr2dmecz/39dz3dV33Q4ii+Offqte5Nf26Qjl2d5AclJBK1bjBaOJ5/iYLWA/q8weAmHz23E478/kCPpudfjoxKSFl28FQD4otEPjS1z9gpx3NZqvT6dQ57vyCxTkvCCazpa//djAURkhwHId6tMMZiydQ27ppQ3pJo3V7vE6XO5vLUSYzKZW3Wi1iTW9AI1zKFwqNRqN0fFyrnZ+cVMuVymW9fnT0GynFYxVqEdDh8wW+bQfn3n3guKtXr98kk8xOZPft3HvuqhtG975vbNqmpmcJiIUIhtlHd3ShaWexWCr8/OVwukB9y+XJ5g6Z9L5kSNaFHuYL0eiexbrB88LKqh64dPoAxsGpdYMxkUwxTJqUDhNj4xNbLncksqtWLwI6v/Apk8nG4j/Ui58FQfg4v5BIpCjKPDP7kjBSZrgN7sVSCW5Uq6cse3l2VoO4C5YtlytI3X/wEOUImDdEDlMmy0Em6w98hVKzxbqk0Xl9fo/XBzKaZa18ZLTdbndHEAqF4bORMglCEyEuwwr8NHh+Wau7NXAHfBD2BhsO70hlcqXqiV5vSKWYZDKlW1l9pFDeGxmNxeIA/H8DWLAGs52eeQE+GA90gF+7fX2TFUXxL6//n7VzLF42AAAAAElFTkSuQmCC',
+        width: 14,
+        height: 14,
+        margin: [20, 0, 0, 0],
+      },
+      {
+        text: 'www.codegym.vn',
+        margin: [25, 0, 0, 0],
+      }
+    ]
+  });
 }
