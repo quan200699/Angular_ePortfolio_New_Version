@@ -226,7 +226,8 @@ export class PortfolioComponent implements OnInit {
   private buildPortfolioDetail = () => ([
       this.buildPortfolioDetailedAssessment(),
       this.buildPortfolioOutcome(),
-      this.buildPortfolioOnlineCourse()
+      this.buildPortfolioOnlineCourse(),
+      this.buildPortfolioAddendum()
     ]
   );
 
@@ -295,5 +296,12 @@ export class PortfolioComponent implements OnInit {
         })
       ]
     }
+  });
+
+  private buildPortfolioAddendum = () => ({
+    text: 'III. PHỤ LỤC',
+    fontSize: 12,
+    bold: true,
+    margin: [0, 20, 0, 0]
   });
 }
