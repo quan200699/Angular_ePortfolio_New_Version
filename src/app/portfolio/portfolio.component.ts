@@ -15,15 +15,15 @@ export class PortfolioComponent implements OnInit {
   onlineCourses: OnlineCourse[] = [
     {
       id: 1,
-      content: 'Học cách học'
+      name: 'Học cách học'
     },
     {
       id: 2,
-      content: 'Hoàn thành mọi việc với Kanban'
+      name: 'Hoàn thành mọi việc với Kanban'
     },
     {
       id: 3,
-      content: 'Scrum Essence'
+      name: 'Scrum Essence'
     }];
 
   constructor() {
@@ -281,7 +281,7 @@ export class PortfolioComponent implements OnInit {
                 bold: true
               },
               {
-                text: onlineCourse.content,
+                text: onlineCourse.name,
                 alignment: 'left',
                 fontSize: 12,
                 bold: true

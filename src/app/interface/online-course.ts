@@ -1,4 +1,6 @@
 export interface OnlineCourse {
   id?: number,
-  content?: string
+  name?: string,
+  complete?: boolean
+  student?: any;
 }
