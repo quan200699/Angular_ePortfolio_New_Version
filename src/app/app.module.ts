@@ -8,11 +8,13 @@ import { LayoutWithSharedComponent } from './layout/layout-with-shared/layout-wi
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {JwtInterceptor} from './helper/jwt-interceptor';
 import {ErrorInterceptor} from './helper/error-interceptor';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LayoutWithSharedComponent
+    LayoutWithSharedComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
