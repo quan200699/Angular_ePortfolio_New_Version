@@ -1,12 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AuthenticationService} from '../service/authentication/authentication.service';
 import {first} from 'rxjs/operators';
 import {User} from '../interface/user';
-
-declare var $: any;
-declare var Swal: any;
+import {NotificationService} from '../service/notification/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -17,14 +14,15 @@ export class LoginComponent implements OnInit {
   loginRequest: User = {
     email: '',
     password: ''
-  }
+  };
   returnUrl: string;
   loading = false;
   submitted = false;
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
-              private authenticationService: AuthenticationService) {
+              private authenticationService: AuthenticationService,
+              private notificationService: NotificationService) {
     if (this.authenticationService.currentUserValue) {
       this.router.navigate(['/']);
     }
@@ -44,35 +42,11 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('ACCESS_TOKEN', data.accessToken);
           this.router.navigate([this.returnUrl]).finally(() => {
           });
-          $(function() {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 3000
-            });
-
-            Toast.fire({
-              type: 'success',
-              title: 'Đăng nhập thành công'
-            });
-          });
+          this.notificationService.showSuccessMessage('Đăng nhập thành công');
         },
         () => {
           this.loading = false;
-          $(function() {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 3000
-            });
-
-            Toast.fire({
-              type: 'error',
-              title: 'Đăng nhập thất bại'
-            });
-          });
+          this.notificationService.showErrorMessage('Đăng nhập thất bại');
         });
   }
 }
