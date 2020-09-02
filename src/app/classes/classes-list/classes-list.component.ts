@@ -26,7 +26,7 @@ export class ClassesListComponent implements OnInit {
     if (this.currentUser) {
       const roleList = this.currentUser.roles;
       for (const role of roleList) {
-        if (role.authority === 'ROLE_ADMIN') {
+        if (role.authority === 'ADMIN') {
           this.hasRoleAdmin = true;
         }
       }

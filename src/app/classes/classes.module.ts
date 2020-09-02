@@ -2,15 +2,19 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ClassesRoutingModule} from './classes-routing.module';
 import {ClassesListComponent} from './classes-list/classes-list.component';
+import {CreateClassComponent} from './create-class/create-class.component';
+import {FormsModule} from '@angular/forms';
 
 
 @NgModule({
   declarations: [
-    ClassesListComponent
+    ClassesListComponent,
+    CreateClassComponent,
   ],
   imports: [
     CommonModule,
-    ClassesRoutingModule
+    ClassesRoutingModule,
+    FormsModule
   ]
 })
 export class ClassesModule {
