@@ -4,6 +4,7 @@ import {UserToken} from '../../interface/user-token';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
+import {User} from '../../interface/user';
 
 const API_URL = environment.apiUrl;
 
@@ -32,6 +33,10 @@ export class AuthenticationService {
         this.update.emit('login');
         return user;
       }));
+  }
+
+  register(user: User): Observable<User> {
+    return this.http.post<User>(API_URL + '/sign-up', user);
   }
 
   logout() {
