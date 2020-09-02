@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Lecture} from '../../interface/lecture';
+import {LectureService} from '../../service/lecture/lecture.service';
 
 @Component({
   selector: 'app-lecture-create',
@@ -13,7 +14,7 @@ export class LectureCreateComponent implements OnInit {
     lectureId: ''
   };
 
-  constructor() {
+  constructor(private lectureService: LectureService) {
   }
 
   ngOnInit() {
