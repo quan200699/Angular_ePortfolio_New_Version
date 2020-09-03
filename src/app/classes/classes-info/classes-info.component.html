@@ -41,7 +41,7 @@
         <tr *ngFor="let student of listStudents; index as i">
           <td>{{i + 1}}</td>
           <td>
-            <a [routerLink]="['info',student.id]">{{student.studentId}}</a>
+            <a [routerLink]="['../../../students/info',student.id]">{{student.studentId}}</a>
           </td>
           <td>{{student.name}}</td>
           <td>{{student.classes != null ? student.classes.name : ''}}</td>
