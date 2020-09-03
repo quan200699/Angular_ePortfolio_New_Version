@@ -7,6 +7,8 @@ import {ProductService} from '../../service/product/product.service';
 import {UserToken} from '../../interface/user-token';
 import {NotificationService} from '../../service/notification/notification.service';
 import {AuthenticationService} from '../../service/authentication/authentication.service';
+import {OnlineCourse} from '../../interface/online-course';
+import {OnlineCourseService} from '../../service/online-course/online-course.service';
 
 declare var $: any;
 
@@ -28,12 +30,14 @@ export class StudentInfoComponent implements OnInit {
     notice: ''
   };
   isShowed: boolean = false;
+  listOnlineCourses: OnlineCourse[] = [];
 
   constructor(private activatedRoute: ActivatedRoute,
               private studentService: StudentService,
               private productService: ProductService,
               private notificationService: NotificationService,
-              private authenticationService: AuthenticationService) {
+              private authenticationService: AuthenticationService,
+              private onlineCourseService: OnlineCourseService) {
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
       this.id = +paramMap.get('id');
       this.getStudent(this.id);
@@ -48,6 +52,7 @@ export class StudentInfoComponent implements OnInit {
         }
       }
     }
+    this.getAllOnlineCourse();
   }
 
   ngOnInit() {
@@ -110,5 +115,21 @@ export class StudentInfoComponent implements OnInit {
 
   showCreateForm() {
     this.isShowed = !this.isShowed;
+  }
+
+  getAllOnlineCourse() {
+    this.onlineCourseService.getAllOnlineCourse().subscribe(listOnlineCourse => {
+      this.listOnlineCourses = listOnlineCourse;
+      $(function() {
+        $('#table-online-course').DataTable({
+          'paging': true,
+          'lengthChange': false,
+          'searching': false,
+          'ordering': true,
+          'info': true,
+          'autoWidth': false,
+        });
+      });
+    });
   }
 }
