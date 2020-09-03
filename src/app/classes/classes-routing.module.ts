@@ -4,6 +4,7 @@ import {ClassesListComponent} from './classes-list/classes-list.component';
 import {CreateClassComponent} from './create-class/create-class.component';
 import {EditClassComponent} from './edit-class/edit-class.component';
 import {ClassesInfoComponent} from './classes-info/classes-info.component';
+import {ClassesAddStudentComponent} from './classes-add-student/classes-add-student.component';
 
 
 const routes: Routes = [
@@ -22,7 +23,11 @@ const routes: Routes = [
   {
     path: 'info/:id',
     component: ClassesInfoComponent
-  }
+  },
+  {
+    path: 'info/:id/create',
+    component: ClassesAddStudentComponent
+  },
 ];
 
 @NgModule({

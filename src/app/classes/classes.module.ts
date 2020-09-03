@@ -6,6 +6,7 @@ import {CreateClassComponent} from './create-class/create-class.component';
 import {FormsModule} from '@angular/forms';
 import {EditClassComponent} from './edit-class/edit-class.component';
 import {ClassesInfoComponent} from './classes-info/classes-info.component';
+import {ClassesAddStudentComponent} from './classes-add-student/classes-add-student.component';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import {ClassesInfoComponent} from './classes-info/classes-info.component';
     CreateClassComponent,
     EditClassComponent,
     ClassesInfoComponent,
+    ClassesAddStudentComponent,
   ],
   imports: [
     CommonModule,
