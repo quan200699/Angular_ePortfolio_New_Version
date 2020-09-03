@@ -32,6 +32,17 @@
           <label for="inputName">Tên lớp học</label>
           <input type="text" id="inputName" class="form-control" [(ngModel)]="classes.name" name="name">
         </div>
+        <div class="form-group">
+          <label for="lecture">Coach</label>
+          <select class="form-control" id="lecture" name="lecture" *ngIf="classes.lecture!=null"
+                  [(ngModel)]="classes.lecture.id">
+            <option [value]="-1" disabled>Chọn giảng viên</option>
+            <option *ngFor="let lecture of listLecture" [value]="lecture.id"
+                    [selected]="lecture.id == classes.lecture.id">
+              {{lecture.name}}
+            </option>
+          </select>
+        </div>
       </div>
       <!-- /.card-body -->
     </div>
