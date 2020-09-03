@@ -23,14 +23,18 @@ export class ModuleService {
   }
 
   getModule(id: number): Observable<Module> {
-    return this.http.get<Module>(API_URL + `/modules/${id}`)
+    return this.http.get<Module>(API_URL + `/modules/${id}`);
   }
 
   updateModule(id: number, module: Module): Observable<Module> {
-    return this.http.put<Module>(API_URL + `/modules/${id}`, module)
+    return this.http.put<Module>(API_URL + `/modules/${id}`, module);
   }
 
   deleteModule(id: number): Observable<Module> {
     return this.http.delete<Module>(API_URL + `/modules/${id}`);
+  }
+
+  getAllModuleByProgram(id: number): Observable<Module[]> {
+    return this.http.get<Module[]>(API_URL + `/programs/${id}/modules`);
   }
 }

@@ -5,6 +5,10 @@ import {ClassesService} from '../../service/classes/classes.service';
 import {NotificationService} from '../../service/notification/notification.service';
 import {LectureService} from '../../service/lecture/lecture.service';
 import {Lecture} from '../../interface/lecture';
+import {Module} from '../../interface/module';
+import {Program} from '../../interface/program';
+import {ProgramService} from '../../service/program/program.service';
+import {ModuleService} from '../../service/module/module.service';
 
 @Component({
   selector: 'app-edit-class',
@@ -15,11 +19,19 @@ export class EditClassComponent implements OnInit {
   classes: Classes = {};
   listLecture: Lecture[] = [];
   id: number;
+  listModule: Module[] = [];
+  listProgram: Program[] = [];
+  program: Program = {
+    id: -1,
+    name: ''
+  };
 
   constructor(private activatedRoute: ActivatedRoute,
               private notificationService: NotificationService,
               private classesService: ClassesService,
-              private lectureService: LectureService) {
+              private lectureService: LectureService,
+              private programService: ProgramService,
+              private moduleService: ModuleService) {
   }
 
   ngOnInit() {
@@ -31,8 +43,14 @@ export class EditClassComponent implements OnInit {
           id: -1
         };
       }
+      if (this.classes.module == null) {
+        this.classes.module = {
+          id: -1
+        };
+      }
     });
     this.getAllLecture();
+    this.getAllProgram();
   }
 
   getClasses(id: number) {
@@ -50,6 +68,18 @@ export class EditClassComponent implements OnInit {
   getAllLecture() {
     this.lectureService.getAllLecture().subscribe(listLecture => {
       this.listLecture = listLecture;
+    });
+  }
+
+  getAllProgram() {
+    this.programService.getAllProgram().subscribe(listProgram => {
+      this.listProgram = listProgram;
+    });
+  }
+
+  getAllModuleByProgram(programId) {
+    this.moduleService.getAllModuleByProgram(programId).subscribe(listModule => {
+      this.listModule = listModule;
     });
   }
 }

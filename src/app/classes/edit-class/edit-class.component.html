@@ -18,7 +18,7 @@
 <!-- Main content -->
 <section class="content">
   <form (ngSubmit)="updateClasses(id)">
-    <div class="card card-secondary">
+    <div class="card card-primary">
       <div class="card-header">
         <h3 class="card-title">Thông tin lớp học</h3>
         <div class="card-tools">
@@ -34,12 +34,33 @@
         </div>
         <div class="form-group">
           <label for="lecture">Coach</label>
-          <select class="form-control" id="lecture" name="lecture" *ngIf="classes.lecture!=null"
-                  [(ngModel)]="classes.lecture.id">
+          <select class="form-control" id="lecture" name="lecture" [(ngModel)]="classes.lecture.id">
             <option [value]="-1" disabled>Chọn giảng viên</option>
             <option *ngFor="let lecture of listLecture" [value]="lecture.id"
                     [selected]="lecture.id == classes.lecture.id">
               {{lecture.name}}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="program">Chương trình học</label>
+          <select class="form-control" id="program" name="program" [(ngModel)]="program.id"
+                  (ngModelChange)="getAllModuleByProgram($event)">
+            <option [value]="-1" disabled>Chọn chương trình học</option>
+            <option *ngFor="let program of listProgram" [value]="program.id"
+                    [selected]="classes.module!=null && classes.module.program!=null
+                    && program.id == classes.module.program.id">
+              {{program.name}}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="module">Module</label>
+          <select class="form-control" id="module" name="module" [(ngModel)]="classes.module.id">
+            <option [value]="-1" disabled>Chọn module</option>
+            <option *ngFor="let module of listModule" [value]="module.id"
+                    [selected]="module.id == classes.lecture.id">
+              {{module.name}}
             </option>
           </select>
         </div>
