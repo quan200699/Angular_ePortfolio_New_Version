@@ -4,6 +4,8 @@ import {StudentService} from '../../service/student/student.service';
 import {Student} from '../../interface/student';
 import {UserToken} from '../../interface/user-token';
 import {AuthenticationService} from '../../service/authentication/authentication.service';
+import {Classes} from '../../interface/classes';
+import {ClassesService} from '../../service/classes/classes.service';
 
 declare var $: any;
 
@@ -17,10 +19,12 @@ export class ClassesInfoComponent implements OnInit {
   listStudents: Student[] = [];
   currentUser: UserToken;
   hasRoleAdmin = false;
+  classes: Classes = {};
 
   constructor(private activatedRoute: ActivatedRoute,
               private authenticationService: AuthenticationService,
-              private studentService: StudentService) {
+              private studentService: StudentService,
+              private classesService: ClassesService) {
     this.authenticationService.currentUser.subscribe(value => this.currentUser = value);
     if (this.currentUser) {
       const roleList = this.currentUser.roles;
@@ -35,12 +39,19 @@ export class ClassesInfoComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(async (paramMap: ParamMap) => {
       this.id = +paramMap.get('id');
+      this.getClasses(this.id);
       this.getAllStudentByClasses(this.id);
     });
   }
 
   getStudentId(id: number) {
     this.id = id;
+  }
+
+  getClasses(id) {
+    this.classesService.getClasses(id).subscribe(classes => {
+      this.classes = classes;
+    });
   }
 
   getAllStudentByClasses(id: number) {
