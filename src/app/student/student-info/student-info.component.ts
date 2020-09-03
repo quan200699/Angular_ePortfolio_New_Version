@@ -22,6 +22,12 @@ export class StudentInfoComponent implements OnInit {
   currentUser: UserToken;
   hasRoleAdmin = false;
   productId: number;
+  product: Product = {
+    name: '',
+    linkProduct: '',
+    notice: ''
+  };
+  isShowed: boolean = false;
 
   constructor(private activatedRoute: ActivatedRoute,
               private studentService: StudentService,
@@ -85,5 +91,24 @@ export class StudentInfoComponent implements OnInit {
     }, () => {
       this.notificationService.showErrorMessage('Xóa thất bại!');
     });
+  }
+
+  createProduct() {
+    this.product.student = {
+      id: this.id
+    };
+    this.productService.createProduct(this.product).subscribe(() => {
+      this.productService.getAllProductByStudent(this.id).subscribe((listProduct) => {
+        this.listProducts = listProduct;
+      });
+      this.notificationService.showSuccessMessage('Tạo mới thành công!');
+      this.product = {};
+    }, () => {
+      this.notificationService.showErrorMessage('Tạo mới thất bại!');
+    });
+  }
+
+  showCreateForm() {
+    this.isShowed = !this.isShowed;
   }
 }
