@@ -59,7 +59,7 @@
           <select class="form-control" id="module" name="module" [(ngModel)]="classes.module.id">
             <option [value]="-1" disabled>Chọn module</option>
             <option *ngFor="let module of listModule" [value]="module.id"
-                    [selected]="module.id == classes.lecture.id">
+                    [selected]="module.id == classes.module.id">
               {{module.name}}
             </option>
           </select>

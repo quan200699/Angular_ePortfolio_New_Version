@@ -47,6 +47,9 @@ export class EditClassComponent implements OnInit {
         this.classes.module = {
           id: -1
         };
+      } else {
+        this.program = this.classes.module.program;
+        this.getAllModuleByProgram(this.program.id);
       }
     });
     this.getAllLecture();
