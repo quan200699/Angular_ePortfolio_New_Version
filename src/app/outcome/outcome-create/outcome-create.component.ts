@@ -20,13 +20,19 @@ export class OutcomeCreateComponent implements OnInit {
 
   createMultiOutcome() {
     let rows = this.data.split('\n');
-    let createMultiOutcomes = rows.map(row => {
-      let columns = row.split('\t');
-      if (columns[0].includes('PHẦN')) {
-        this.createOutcome(columns[0].trim());
+    let outcomeTitles = [];
+    for (let i = 0; i < rows.length; i++) {
+      let columns = rows[i].split('\t');
+      if (columns[0].toUpperCase().includes('PHẦN')) {
+        outcomeTitles.push(columns[0]);
       }
-    });
-    Promise.all(createMultiOutcomes).then(() => {
+    }
+    let result = outcomeTitles.reduce((createMultiPromise, nextTitle) => {
+      return createMultiPromise.then(() => {
+        return this.createOutcome(nextTitle);
+      });
+    }, Promise.resolve());
+    result.then(() => {
       this.notificationService.showSuccessMessage('Tạo thành công!');
       this.data = '';
     }).catch(() => {
