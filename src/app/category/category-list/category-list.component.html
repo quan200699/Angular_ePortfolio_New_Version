@@ -38,7 +38,9 @@
         <tbody>
         <tr *ngFor="let category of listCategory; index as i">
           <td>{{i + 1}}</td>
-          <td>{{category.title}}</td>
+          <td>{{category.categoryId}}</td>
+          <td>{{category.name}}</td>
+          <td>{{category.outcome!=null && category.outcome.name}}</td>
           <td *ngIf="hasRoleAdmin">
             <div class="row">
               <div class="col-6">
