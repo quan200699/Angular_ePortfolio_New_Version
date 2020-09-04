@@ -28,16 +28,23 @@ export class ClassesAddStudentComponent implements OnInit {
 
   createMultiStudent() {
     let students = this.data.split('\n');
-    let createMultiStudent = students.map(student => {
+    let studentValues = [];
+    students.map(student => {
       let row = student.split('\t');
       if (row.length >= 3) {
-        return this.createStudent(row);
+        studentValues.push(row);
       }
     });
-    Promise.all(createMultiStudent).then(() => {
-      this.notificationService.showSuccessMessage('Taọ mới thành công!');
+    let result = studentValues.reduce((createMultiPromise, student) => {
+      return createMultiPromise.then(async () => {
+        return await this.createStudent(student);
+      });
+    }, Promise.resolve());
+    result.then(() => {
+      this.notificationService.showSuccessMessage('Tạo thành công!');
+      this.data = '';
     }).catch(() => {
-      this.notificationService.showErrorMessage('Tạo mới thất bại!');
+      this.notificationService.showErrorMessage('Tạo thất bại!');
     });
   }
 
