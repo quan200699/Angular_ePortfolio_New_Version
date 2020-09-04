@@ -28,7 +28,11 @@ const routes: Routes = [
       {
         path: 'templates',
         loadChildren: () => import('./template/template.module').then(module => module.TemplateModule)
-      }
+      },
+      {
+        path: 'outcomes',
+        loadChildren: () => import('./outcome/outcome.module').then(module => module.OutcomeModule)
+      },
     ]
   },
   {
