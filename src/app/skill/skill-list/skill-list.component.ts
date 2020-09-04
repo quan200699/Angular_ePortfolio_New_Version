@@ -2,23 +2,23 @@ import {Component, OnInit} from '@angular/core';
 import {UserToken} from '../../interface/user-token';
 import {NotificationService} from '../../service/notification/notification.service';
 import {AuthenticationService} from '../../service/authentication/authentication.service';
-import {Category} from '../../interface/category';
-import {CategoryService} from '../../service/category/category.service';
+import {Skill} from '../../interface/skill';
+import {SkillService} from '../../service/skill/skill.service';
 
 declare var $: any;
 
 @Component({
-  selector: 'app-category-list',
-  templateUrl: './category-list.component.html',
-  styleUrls: ['./category-list.component.css']
+  selector: 'app-skill-list',
+  templateUrl: './skill-list.component.html',
+  styleUrls: ['./skill-list.component.css']
 })
-export class CategoryListComponent implements OnInit {
-  listCategory: Category[];
+export class SkillListComponent implements OnInit {
+  listSkill: Skill[];
   currentUser: UserToken;
   hasRoleAdmin = false;
   id: number;
 
-  constructor(private categoryService: CategoryService,
+  constructor(private skillService: SkillService,
               private notificationService: NotificationService,
               private authenticationService: AuthenticationService) {
     this.authenticationService.currentUser.subscribe(value => this.currentUser = value);
@@ -33,17 +33,17 @@ export class CategoryListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getAllCategory();
+    this.getAllSkill();
   }
 
-  getCategoryId(id: number) {
+  getSkillId(id: number) {
     this.id = id;
   }
 
-  deleteCategory() {
-    this.categoryService.deleteCategory(this.id).subscribe(() => {
-      this.categoryService.getAllCategory().subscribe(listCategory => {
-        this.listCategory = listCategory;
+  deleteSkill() {
+    this.skillService.deleteSkill(this.id).subscribe(() => {
+      this.skillService.getAllSkill().subscribe(listSkill => {
+        this.listSkill = listSkill;
       });
       $(function() {
         $('#modal-delete').modal('hide');
@@ -54,11 +54,11 @@ export class CategoryListComponent implements OnInit {
     });
   }
 
-  getAllCategory() {
-    this.categoryService.getAllCategory().subscribe(listCategory => {
-      this.listCategory = listCategory;
+  getAllSkill() {
+    this.skillService.getAllSkill().subscribe(listSkill => {
+      this.listSkill = listSkill;
       $(function() {
-        $('#table-category').DataTable({
+        $('#table-skill').DataTable({
           'paging': true,
           'lengthChange': false,
           'searching': false,

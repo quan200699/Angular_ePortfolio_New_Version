@@ -2,12 +2,12 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1>Danh sách danh mục</h1>
+        <h1>Danh sách kỹ năng</h1>
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a routerLink="/">Trang chủ</a></li>
-          <li class="breadcrumb-item active">Danh sách danh mục</li>
+          <li class="breadcrumb-item active">Danh sách kỹ năng</li>
         </ol>
       </div>
     </div>
@@ -25,32 +25,32 @@
       </div>
     </div>
     <div class="card-body">
-      <table class="table table-bordered" id="table-category">
+      <table class="table table-bordered" id="table-skill">
         <thead>
         <tr>
           <th style="width: 10px">#</th>
-          <th>Mã danh mục</th>
+          <th>Mã kỹ năng</th>
+          <th>Tên kỹ năng</th>
           <th>Tên danh mục</th>
-          <th>Chuẩn đầu ra</th>
           <th style="width: 160px" *ngIf="hasRoleAdmin"></th>
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let category of listCategory; index as i">
+        <tr *ngFor="let skill of listSkill; index as i">
           <td>{{i + 1}}</td>
-          <td>{{category.categoryId}}</td>
-          <td>{{category.name}}</td>
-          <td>{{category.outcome!=null && category.outcome.title}}</td>
+          <td>{{skill.skillId}}</td>
+          <td>{{skill.name}}</td>
+          <td>{{skill.categories!=null && skill.categories.name}}</td>
           <td *ngIf="hasRoleAdmin">
             <div class="row">
               <div class="col-6">
-                <a [routerLink]="['edit',category.id]" class="btn btn-block btn-primary" style="color: white">
+                <a [routerLink]="['edit',skill.id]" class="btn btn-block btn-primary" style="color: white">
                   <i class="fas fa-edit"></i>
                 </a>
               </div>
               <div class="col-6">
                 <button type="button" class="btn btn-block btn-danger" style="color: white" data-toggle="modal"
-                        data-target="#modal-delete" (click)="getCategoryId(category.id)">
+                        data-target="#modal-delete" (click)="getSkillId(skill.id)">
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
@@ -65,17 +65,17 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Xóa danh mục</h4>
+          <h4 class="modal-title">Xóa kỹ năng</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <p>Bạn có chắc muốn xóa danh mục này</p>
+          <p>Bạn có chắc muốn xóa kỹ năng này</p>
         </div>
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-          <button type="button" class="btn btn-danger" (click)="deleteCategory()">Xóa</button>
+          <button type="button" class="btn btn-danger" (click)="deleteSkill()">Xóa</button>
         </div>
       </div>
       <!-- /.modal-content -->
