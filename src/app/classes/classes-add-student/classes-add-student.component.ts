@@ -4,6 +4,7 @@ import {NotificationService} from '../../service/notification/notification.servi
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Student} from '../../interface/student';
 import {Classes} from '../../interface/classes';
+import {ClassesService} from '../../service/classes/classes.service';
 
 @Component({
   selector: 'app-classes-add-student',
@@ -17,6 +18,7 @@ export class ClassesAddStudentComponent implements OnInit {
 
   constructor(private studentService: StudentService,
               private notificationService: NotificationService,
+              private classesService: ClassesService,
               private activatedRoute: ActivatedRoute) {
   }
 
@@ -41,14 +43,32 @@ export class ClassesAddStudentComponent implements OnInit {
     });
   }
 
-  createStudent(students) {
-    const student: Student = {
+  getClasses(id: number) {
+    return this.classesService.getClasses(id).toPromise();
+  }
+
+  async createStudent(students) {
+    let student: Student = {
       studentId: students[1],
       name: students[2],
       classes: {
         id: this.id
       }
     };
+    let classes = await this.getClasses(this.id);
+    if (classes.module != null) {
+      if (classes.module.program != null) {
+        if (classes.module.program.name.includes('Java')) {
+          student.template = {
+            id: 1
+          };
+        } else {
+          student.template = {
+            id: 2
+          };
+        }
+      }
+    }
     return this.studentService.createStudent(student).toPromise();
   }
 }
