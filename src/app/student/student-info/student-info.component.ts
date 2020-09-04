@@ -52,6 +52,8 @@ export class StudentInfoComponent implements OnInit {
     advantages: '',
     suggestion: ''
   };
+  listEvaluations: Evaluations[] = [];
+  evaluationId: number;
 
   constructor(private activatedRoute: ActivatedRoute,
               private studentService: StudentService,
@@ -67,6 +69,7 @@ export class StudentInfoComponent implements OnInit {
       this.getStudent(this.id);
       this.getAllProductByStudent(this.id);
       this.countNumberOfCertificate(this.id);
+      this.getAllEvaluationsByStudent(this.id);
     });
     this.authenticationService.currentUser.subscribe(value => this.currentUser = value);
     if (this.currentUser) {
@@ -115,7 +118,7 @@ export class StudentInfoComponent implements OnInit {
         this.listProducts = listProduct;
       });
       $(function() {
-        $('#modal-delete').modal('hide');
+        $('#modal-delete1').modal('hide');
       });
       this.notificationService.showSuccessMessage('Xóa thành công!');
     }, () => {
@@ -255,5 +258,32 @@ export class StudentInfoComponent implements OnInit {
 
   createDescription(description) {
     return this.descriptionService.createDescription(description).toPromise();
+  }
+
+  getAllEvaluationsByStudent(id: number) {
+    this.evaluationService.getAllEvaluationsByStudent(id).subscribe(listEvaluation => {
+      this.listEvaluations = listEvaluation;
+      this.listEvaluations.map(evaluations => {
+        evaluations.createDate = new Date(evaluations.createDate);
+      });
+    });
+  }
+
+  getEvaluationId(id: any) {
+    this.evaluationId = id;
+  }
+
+  deleteEvaluations() {
+    this.evaluationService.deleteEvaluations(this.evaluationId).subscribe(() => {
+      this.evaluationService.getAllEvaluationsByStudent(this.id).subscribe(listEvaluations => {
+        this.listEvaluations = listEvaluations;
+      });
+      $(function() {
+        $('#modal-delete2').modal('hide');
+      });
+      this.notificationService.showSuccessMessage('Xóa thành công!');
+    }, () => {
+      this.notificationService.showErrorMessage('Xóa thất bại!');
+    });
   }
 }
