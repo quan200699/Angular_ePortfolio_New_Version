@@ -37,4 +37,8 @@ export class CertificateService {
   getCertificateByStudentAndOnlineCourse(id: number, onlineCourseId: number): Observable<Certificate> {
     return this.http.get<Certificate>(API_URL + `/students/${id}/online-courses/${onlineCourseId}/certificates`);
   }
+
+  countNumberOfCertificateComplete(studentId: number): Observable<number> {
+    return this.http.get<number>(API_URL + `/certificates/students?studentId=${studentId}`);
+  }
 }

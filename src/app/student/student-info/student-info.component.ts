@@ -38,6 +38,7 @@ export class StudentInfoComponent implements OnInit {
   listOnlineCourses: OnlineCourse[] = [];
   isEditOnlineCourse: boolean = false;
   index: number = -1;
+  numberOfCertificateIsCompleted: number = 0;
 
   constructor(private activatedRoute: ActivatedRoute,
               private studentService: StudentService,
@@ -50,6 +51,7 @@ export class StudentInfoComponent implements OnInit {
       this.id = +paramMap.get('id');
       this.getStudent(this.id);
       this.getAllProductByStudent(this.id);
+      this.countNumberOfCertificate(this.id);
     });
     this.authenticationService.currentUser.subscribe(value => this.currentUser = value);
     if (this.currentUser) {
@@ -194,6 +196,12 @@ export class StudentInfoComponent implements OnInit {
       this.certificate = {};
     }, () => {
       this.notificationService.showErrorMessage('Cập nhật thất bại!');
+    });
+  }
+
+  countNumberOfCertificate(id) {
+    return this.certificateService.countNumberOfCertificateComplete(id).subscribe(numbers => {
+      this.numberOfCertificateIsCompleted = numbers;
     });
   }
 }
