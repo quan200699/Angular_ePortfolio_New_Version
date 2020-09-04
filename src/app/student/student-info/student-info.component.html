@@ -209,49 +209,52 @@
               <!-- /.tab-pane -->
 
               <div class="tab-pane" id="evaluation">
-                <form class="form-horizontal">
+                <form class="form-horizontal" (ngSubmit)="createEvaluation()">
                   <div class="form-group row">
-                    <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                    <label for="inputName" class="col-sm-2 col-form-label">Tên bản đánh giá</label>
                     <div class="col-sm-10">
-                      <input type="email" class="form-control" id="inputName" placeholder="Name">
+                      <input type="text" class="form-control" id="inputName" name="name" [(ngModel)]="evaluations.name"
+                             placeholder="Tên bản đánh giá">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                    <label for="date" class="col-sm-2 col-form-label">Ngày tạo</label>
                     <div class="col-sm-10">
-                      <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                      <input id="date" type="date" class="form-control" name="createDate"
+                             data-inputmask-inputformat="dd/mm/yyyy" [(ngModel)]="evaluations.createDate">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputName2" class="col-sm-2 col-form-label">Name</label>
+                    <label for="evaluation1" class="col-sm-2 col-form-label">Đánh giá</label>
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputName2" placeholder="Name">
+                      <input type="text" class="form-control" id="evaluation1" placeholder="Đánh giá"
+                             [(ngModel)]="evaluations.evaluation" name="evaluation">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputExperience" class="col-sm-2 col-form-label">Experience</label>
+                    <label for="advantage" class="col-sm-2 col-form-label">Ưu điểm</label>
                     <div class="col-sm-10">
-                      <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
+                      <input type="text" class="form-control" id="advantage" [(ngModel)]="description.advantage"
+                             placeholder="Ưu điểm" name="advantage"/>
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>
+                    <label for="achiles" class="col-sm-2 col-form-label">Nhược điểm</label>
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
+                      <input type="text" class="form-control" name="achiles" [(ngModel)]="description.achiles"
+                             id="achiles" placeholder="Nhược điểm">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="suggestion" class="col-sm-2 col-form-label">Gợi ý cho doanh nghiệp</label>
+                    <div class="col-sm-10">
+                      <textarea class="form-control" id="suggestion" placeholder="Gợi ý cho doanh nghiệp"
+                                name="suggestion" [(ngModel)]="description.suggestion"></textarea>
                     </div>
                   </div>
                   <div class="form-group row">
                     <div class="offset-sm-2 col-sm-10">
-                      <div class="checkbox">
-                        <label>
-                          <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <div class="offset-sm-2 col-sm-10">
-                      <button type="submit" class="btn btn-danger">Submit</button>
+                      <button type="submit" class="btn btn-primary">Tạo</button>
                     </div>
                   </div>
                 </form>

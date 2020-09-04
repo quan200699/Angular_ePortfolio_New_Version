@@ -11,6 +11,8 @@ import {OnlineCourse} from '../../interface/online-course';
 import {OnlineCourseService} from '../../service/online-course/online-course.service';
 import {CertificateService} from '../../service/certificate/certificate.service';
 import {Certificate} from '../../interface/certificate';
+import {Evaluations} from '../../interface/evaluations';
+import {Description} from '../../interface/description';
 
 declare var $: any;
 
@@ -39,6 +41,15 @@ export class StudentInfoComponent implements OnInit {
   isEditOnlineCourse: boolean = false;
   index: number = -1;
   numberOfCertificateIsCompleted: number = 0;
+  evaluations: Evaluations = {
+    name: '',
+    evaluation: ''
+  };
+  description: Description = {
+    achiles: '',
+    advantage: '',
+    suggestion: ''
+  };
 
   constructor(private activatedRoute: ActivatedRoute,
               private studentService: StudentService,
@@ -203,5 +214,9 @@ export class StudentInfoComponent implements OnInit {
     return this.certificateService.countNumberOfCertificateComplete(id).subscribe(numbers => {
       this.numberOfCertificateIsCompleted = numbers;
     });
+  }
+
+  createEvaluation() {
+
   }
 }
