@@ -38,10 +38,10 @@
                 <b>Số lượng dự án</b> <a class="float-right">{{listProducts.length}}</a>
               </li>
               <li class="list-group-item">
-                <b>Các khóa học đã hoàn thành</b> <a class="float-right">543/3</a>
+                <b>Các khóa học đã hoàn thành</b> <a class="float-right">0/3</a>
               </li>
               <li class="list-group-item">
-                <b>Số lượng bản đánh giá</b> <a class="float-right">13,287</a>
+                <b>Số lượng bản đánh giá</b> <a class="float-right">0/6</a>
               </li>
             </ul>
           </div>
@@ -185,7 +185,7 @@
                       {{onlineCourse.name}}
                     </td>
                     <td *ngIf="!isEditOnlineCourse || index!=i">
-                      {{getCertificateComplete(onlineCourse) ? 'Đã hoàn thành' : 'Chưa hoàn thành'}}
+                      {{onlineCourse.complete ? 'Đã hoàn thành' : 'Chưa hoàn thành'}}
                     </td>
                     <td *ngIf="isEditOnlineCourse && index == i">
                       <select class="custom-select" (ngModelChange)="saveCertificate(onlineCourse)"

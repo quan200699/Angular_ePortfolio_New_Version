@@ -128,6 +128,10 @@ export class StudentInfoComponent implements OnInit {
   getAllOnlineCourse() {
     this.onlineCourseService.getAllOnlineCourse().subscribe(listOnlineCourse => {
       this.listOnlineCourses = listOnlineCourse;
+      this.listOnlineCourses.map(async onlineCourse => {
+        let certificate = await this.getCertificate(onlineCourse);
+        onlineCourse.complete = certificate.complete;
+      });
       $(function() {
         $('#table-online-course').DataTable({
           'paging': true,
@@ -154,16 +158,6 @@ export class StudentInfoComponent implements OnInit {
 
   getCertificate(onlineCourse: OnlineCourse) {
     return this.certificateService.getCertificateByStudentAndOnlineCourse(this.id, onlineCourse.id).toPromise();
-  }
-
-  async getCertificateComplete(onlineCourse: OnlineCourse) {
-    let certificate = await this.getCertificate(onlineCourse);
-    if (certificate == null) {
-      certificate = {
-        complete: false
-      };
-    }
-    return certificate.complete;
   }
 
   async saveCertificate(onlineCourse: OnlineCourse) {
