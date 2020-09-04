@@ -14,7 +14,6 @@ import {ClassesService} from '../../service/classes/classes.service';
 export class ClassesAddStudentComponent implements OnInit {
   data: string = '';
   id: number;
-  classes: Classes = {};
 
   constructor(private studentService: StudentService,
               private notificationService: NotificationService,
@@ -43,10 +42,6 @@ export class ClassesAddStudentComponent implements OnInit {
     });
   }
 
-  getClasses(id: number) {
-    return this.classesService.getClasses(id).toPromise();
-  }
-
   async createStudent(students) {
     let student: Student = {
       studentId: students[1],
@@ -55,20 +50,6 @@ export class ClassesAddStudentComponent implements OnInit {
         id: this.id
       }
     };
-    let classes = await this.getClasses(this.id);
-    if (classes.module != null) {
-      if (classes.module.program != null) {
-        if (classes.module.program.name.includes('Java')) {
-          student.template = {
-            id: 1
-          };
-        } else {
-          student.template = {
-            id: 2
-          };
-        }
-      }
-    }
     return this.studentService.createStudent(student).toPromise();
   }
 }

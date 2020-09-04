@@ -87,6 +87,7 @@
               <li class="nav-item"><a class="nav-link active" href="#product" data-toggle="tab">Sản phẩm</a></li>
               <li class="nav-item"><a class="nav-link" href="#online-course" data-toggle="tab">Khóa học</a></li>
               <li class="nav-item"><a class="nav-link" href="#evaluation" data-toggle="tab">Đánh giá</a></li>
+              <li class="nav-item"><a class="nav-link" href="#evaluation-list" data-toggle="tab">Bản đánh giá</a></li>
             </ul>
           </div><!-- /.card-header -->
           <div class="card-body">
@@ -258,6 +259,46 @@
                     </div>
                   </div>
                 </form>
+              </div>
+
+              <div class="tab-pane" id="evaluation-list">
+                <!-- The timeline -->
+                <table class="table table-bordered" id="table-evaluations">
+                  <thead>
+                  <tr>
+                    <th style="width: 10px">#</th>
+                    <th>Tên khóa học</th>
+                    <th>Đánh giá</th>
+                    <th style="width: 160px" *ngIf="hasRoleAdmin"></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let onlineCourse of listOnlineCourses; index as i">
+                    <td>{{i + 1}}</td>
+                    <td>
+                      {{onlineCourse.name}}
+                    </td>
+                    <td *ngIf="!isEditOnlineCourse || index!=i">
+                      {{onlineCourse.complete ? 'Đã hoàn thành' : 'Chưa hoàn thành'}}
+                    </td>
+                    <td *ngIf="isEditOnlineCourse && index == i">
+                      <select class="custom-select" (ngModelChange)="saveCertificate(onlineCourse)"
+                              [(ngModel)]="certificate.complete" name="complete">
+                        <option [value]="false">Chưa hoàn thành</option>
+                        <option [value]="true">Đã hoàn thành</option>
+                      </select>
+                    </td>
+                    <td *ngIf="hasRoleAdmin">
+                      <div class="row">
+                        <a (click)="showEditForm(onlineCourse, i)" class="btn btn-block btn-primary"
+                           style="color: white">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
               </div>
               <!-- /.tab-pane -->
             </div>

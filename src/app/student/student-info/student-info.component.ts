@@ -220,15 +220,29 @@ export class StudentInfoComponent implements OnInit {
     });
   }
 
+  getStudentToPromise(id: number) {
+    return this.studentService.getStudent(id).toPromise();
+  }
+
   async createEvaluation() {
     let description = await this.createDescription(this.description);
     if (description != null) {
       this.evaluations.description = {
         id: description.id
       };
-      this.evaluations.template = {
-        id: this.student.template.id
+      this.evaluations.student = {
+        id: this.id
       };
+      let student = await this.getStudentToPromise(this.id);
+      if (student.classes.module.program.name.includes('Java')) {
+        this.evaluations.template = {
+          id: 1
+        };
+      } else {
+        this.evaluations.template = {
+          id: 2
+        };
+      }
       this.evaluationService.createDescription(this.evaluations).subscribe(() => {
         this.notificationService.showSuccessMessage('Đánh giá thành công!');
         this.evaluations = {};

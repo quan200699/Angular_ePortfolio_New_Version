@@ -5,4 +5,5 @@ export interface Evaluations {
   name?: string;
   description?: any;
   template?: any;
+  student?: any;
 }
