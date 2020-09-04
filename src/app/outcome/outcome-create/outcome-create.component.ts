@@ -28,8 +28,8 @@ export class OutcomeCreateComponent implements OnInit {
       }
     }
     let result = outcomeTitles.reduce((createMultiPromise, nextTitle) => {
-      return createMultiPromise.then(() => {
-        return this.createOutcome(nextTitle);
+      return createMultiPromise.then(async () => {
+        return await this.createOutcome(nextTitle);
       });
     }, Promise.resolve());
     result.then(() => {
