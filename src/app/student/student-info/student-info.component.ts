@@ -49,7 +49,7 @@ export class StudentInfoComponent implements OnInit {
   };
   description: Description = {
     achiles: '',
-    advantage: '',
+    advantages: '',
     suggestion: ''
   };
 
