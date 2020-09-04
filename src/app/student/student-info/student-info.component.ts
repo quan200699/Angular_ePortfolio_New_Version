@@ -156,6 +156,16 @@ export class StudentInfoComponent implements OnInit {
     return this.certificateService.getCertificateByStudentAndOnlineCourse(this.id, onlineCourse.id).toPromise();
   }
 
+  async getCertificateComplete(onlineCourse: OnlineCourse) {
+    let certificate = await this.getCertificate(onlineCourse);
+    if (certificate == null) {
+      certificate = {
+        complete: false
+      };
+    }
+    return certificate.complete;
+  }
+
   async saveCertificate(onlineCourse: OnlineCourse) {
     let certificate = await this.getCertificate(onlineCourse);
     if (certificate == null) {

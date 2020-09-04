@@ -185,7 +185,7 @@
                       {{onlineCourse.name}}
                     </td>
                     <td *ngIf="!isEditOnlineCourse || index!=i">
-                      {{onlineCourse.complete ? 'Đã hoàn thành' : 'Chưa hoàn thành'}}
+                      {{getCertificateComplete(onlineCourse) ? 'Đã hoàn thành' : 'Chưa hoàn thành'}}
                     </td>
                     <td *ngIf="isEditOnlineCourse && index == i">
                       <select class="custom-select" (ngModelChange)="saveCertificate(onlineCourse)"
