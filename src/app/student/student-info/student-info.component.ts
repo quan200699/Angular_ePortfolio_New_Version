@@ -232,7 +232,7 @@ export class StudentInfoComponent implements OnInit {
       this.evaluationService.createDescription(this.evaluations).subscribe(() => {
         this.notificationService.showSuccessMessage('Đánh giá thành công!');
         this.evaluations = {};
-        description = {};
+        this.description = {};
       }, () => {
         this.notificationService.showErrorMessage('Đánh giá thất bại!');
       });
