@@ -1,6 +1,6 @@
 export interface Description {
   id?: number;
   achiles?: string;
-  advantage?: string;
+  advantages?: string;
   suggestion?: string;
 }

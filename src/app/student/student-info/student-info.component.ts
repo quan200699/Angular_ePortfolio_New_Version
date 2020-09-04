@@ -13,6 +13,8 @@ import {CertificateService} from '../../service/certificate/certificate.service'
 import {Certificate} from '../../interface/certificate';
 import {Evaluations} from '../../interface/evaluations';
 import {Description} from '../../interface/description';
+import {DescriptionService} from '../../service/description/description.service';
+import {EvaluationsService} from '../../service/evaluations/evaluations.service';
 
 declare var $: any;
 
@@ -57,7 +59,9 @@ export class StudentInfoComponent implements OnInit {
               private notificationService: NotificationService,
               private authenticationService: AuthenticationService,
               private onlineCourseService: OnlineCourseService,
-              private certificateService: CertificateService) {
+              private certificateService: CertificateService,
+              private descriptionService: DescriptionService,
+              private evaluationService: EvaluationsService) {
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
       this.id = +paramMap.get('id');
       this.getStudent(this.id);
@@ -216,7 +220,26 @@ export class StudentInfoComponent implements OnInit {
     });
   }
 
-  createEvaluation() {
+  async createEvaluation() {
+    let description = await this.createDescription(this.description);
+    if (description != null) {
+      this.evaluations.description = {
+        id: description.id
+      };
+      this.evaluations.template = {
+        id: this.student.template.id
+      };
+      this.evaluationService.createDescription(this.evaluations).subscribe(() => {
+        this.notificationService.showSuccessMessage('Đánh giá thành công!');
+        this.evaluations = {};
+        description = {};
+      }, () => {
+        this.notificationService.showErrorMessage('Đánh giá thất bại!');
+      });
+    }
+  }
 
+  createDescription(description) {
+    return this.descriptionService.createDescription(description).toPromise();
   }
 }
