@@ -37,6 +37,10 @@ const routes: Routes = [
         path: 'categories',
         loadChildren: () => import('./category/category.module').then(module => module.CategoryModule)
       },
+      {
+        path: 'skills',
+        loadChildren: () => import('./skill/skill.module').then(module => module.SkillModule)
+      },
     ]
   },
   {
