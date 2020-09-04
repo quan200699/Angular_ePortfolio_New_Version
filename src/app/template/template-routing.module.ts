@@ -1,8 +1,14 @@
 import { NgModule } from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+import {TemplateListComponent} from './template-list/template-list.component';
 
 
-const routes: Routes = []
+const routes: Routes = [
+  {
+    path: '',
+    component: TemplateListComponent
+  }
+]
 @NgModule({
   declarations: [],
   imports: [

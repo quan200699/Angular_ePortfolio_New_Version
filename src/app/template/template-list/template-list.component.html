@@ -1,0 +1,81 @@
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Danh sách bản mẫu đánh giá</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a routerLink="/">Trang chủ</a></li>
+          <li class="breadcrumb-item active">Danh sách bản mẫu đánh giá</li>
+        </ol>
+      </div>
+    </div>
+  </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title"></h3>
+      <div class="card-tools">
+        <a routerLink="create" *ngIf="hasRoleAdmin" class="btn btn-primary float-lg-right">
+          Tạo mới
+        </a>
+      </div>
+    </div>
+    <div class="card-body">
+      <table class="table table-bordered" id="table-templates">
+        <thead>
+        <tr>
+          <th style="width: 10px">#</th>
+          <th>Tên bản đánh giá</th>
+          <th style="width: 160px" *ngIf="hasRoleAdmin"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let student of listTemplate; index as i">
+          <td>{{i + 1}}</td>
+          <td>{{student.name}}</td>
+          <td *ngIf="hasRoleAdmin">
+            <div class="row">
+              <div class="col-6">
+                <a [routerLink]="['edit',student.id]" class="btn btn-block btn-primary" style="color: white">
+                  <i class="fas fa-edit"></i>
+                </a>
+              </div>
+              <div class="col-6">
+                <button type="button" class="btn btn-block btn-danger" style="color: white" data-toggle="modal"
+                        data-target="#modal-delete" (click)="getTemplateId(student.id)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal fade" id="modal-delete">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Xóa bản mẫu đánh giá</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Bạn có chắc muốn xóa bản mẫu đánh giá này</p>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-danger" (click)="deleteTemplate()">Xóa</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+</section>
