@@ -9,6 +9,8 @@ import {NotificationService} from '../../service/notification/notification.servi
 import {AuthenticationService} from '../../service/authentication/authentication.service';
 import {OnlineCourse} from '../../interface/online-course';
 import {OnlineCourseService} from '../../service/online-course/online-course.service';
+import {CertificateService} from '../../service/certificate/certificate.service';
+import {Certificate} from '../../interface/certificate';
 
 declare var $: any;
 
@@ -29,15 +31,21 @@ export class StudentInfoComponent implements OnInit {
     linkProduct: '',
     notice: ''
   };
+  certificate: Certificate = {
+    complete: false
+  };
   isShowed: boolean = false;
   listOnlineCourses: OnlineCourse[] = [];
+  isEditOnlineCourse: boolean = false;
+  index: number = -1;
 
   constructor(private activatedRoute: ActivatedRoute,
               private studentService: StudentService,
               private productService: ProductService,
               private notificationService: NotificationService,
               private authenticationService: AuthenticationService,
-              private onlineCourseService: OnlineCourseService) {
+              private onlineCourseService: OnlineCourseService,
+              private certificateService: CertificateService) {
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
       this.id = +paramMap.get('id');
       this.getStudent(this.id);
@@ -130,6 +138,58 @@ export class StudentInfoComponent implements OnInit {
           'autoWidth': false,
         });
       });
+    });
+  }
+
+  async showEditForm(onlineCourse: OnlineCourse, index) {
+    this.isEditOnlineCourse = !this.isEditOnlineCourse;
+    this.index = index;
+    this.certificate = await this.getCertificate(onlineCourse);
+    if (this.certificate == null) {
+      this.certificate = {
+        complete: false
+      };
+    }
+  }
+
+  getCertificate(onlineCourse: OnlineCourse) {
+    return this.certificateService.getCertificateByStudentAndOnlineCourse(this.id, onlineCourse.id).toPromise();
+  }
+
+  async saveCertificate(onlineCourse: OnlineCourse) {
+    let certificate = await this.getCertificate(onlineCourse);
+    if (certificate == null) {
+      certificate = {
+        complete: this.certificate.complete,
+        onlineCourse: {
+          id: onlineCourse.id
+        },
+        student: {
+          id: this.id
+        }
+      };
+      this.createCertificate(certificate);
+    } else {
+      certificate.complete = this.certificate.complete;
+      this.updateCertificate(certificate);
+    }
+  }
+
+  createCertificate(certificate) {
+    this.certificateService.createCertificate(certificate).subscribe(() => {
+      this.notificationService.showSuccessMessage('Cập nhật thành công!');
+      this.certificate = {};
+    }, () => {
+      this.notificationService.showErrorMessage('Cập nhật thất bại!');
+    });
+  }
+
+  updateCertificate(certificate) {
+    this.certificateService.updateCertificate(certificate.id, certificate).subscribe(() => {
+      this.notificationService.showSuccessMessage('Cập nhật thành công!');
+      this.certificate = {};
+    }, () => {
+      this.notificationService.showErrorMessage('Cập nhật thất bại!');
     });
   }
 }

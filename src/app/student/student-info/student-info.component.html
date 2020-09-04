@@ -184,10 +184,19 @@
                     <td>
                       {{onlineCourse.name}}
                     </td>
-                    <td>{{onlineCourse.complete ? 'Đã hoàn thành' : 'Chưa hoàn thành'}}</td>
+                    <td *ngIf="!isEditOnlineCourse || index!=i">
+                      {{onlineCourse.complete ? 'Đã hoàn thành' : 'Chưa hoàn thành'}}
+                    </td>
+                    <td *ngIf="isEditOnlineCourse && index == i">
+                      <select class="custom-select" (ngModelChange)="saveCertificate(onlineCourse)"
+                              [(ngModel)]="certificate.complete" name="complete">
+                        <option [value]="false">Chưa hoàn thành</option>
+                        <option [value]="true">Đã hoàn thành</option>
+                      </select>
+                    </td>
                     <td *ngIf="hasRoleAdmin">
                       <div class="row">
-                        <a [routerLink]="['edit',onlineCourse.id]" class="btn btn-block btn-primary"
+                        <a (click)="showEditForm(onlineCourse, i)" class="btn btn-block btn-primary"
                            style="color: white">
                           <i class="fas fa-edit"></i>
                         </a>

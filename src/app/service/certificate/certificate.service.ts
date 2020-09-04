@@ -23,14 +23,18 @@ export class CertificateService {
   }
 
   getCertificate(id: number): Observable<Certificate> {
-    return this.http.get<Certificate>(API_URL + `/certificates/${id}`)
+    return this.http.get<Certificate>(API_URL + `/certificates/${id}`);
   }
 
   updateCertificate(id: number, certificate: Certificate): Observable<Certificate> {
-    return this.http.put<Certificate>(API_URL + `/certificates/${id}`, certificate)
+    return this.http.put<Certificate>(API_URL + `/certificates/${id}`, certificate);
   }
 
   deleteCertificate(id: number): Observable<Certificate> {
     return this.http.delete<Certificate>(API_URL + `/certificates/${id}`);
+  }
+
+  getCertificateByStudentAndOnlineCourse(id: number, onlineCourseId: number): Observable<Certificate> {
+    return this.http.get<Certificate>(API_URL + `/students/${id}/online-courses/${onlineCourseId}/certificates`);
   }
 }
