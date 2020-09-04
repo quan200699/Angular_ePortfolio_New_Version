@@ -19,14 +19,20 @@ export class CreateClassComponent implements OnInit {
   }
 
   createMultiClass() {
+    let classNames = [];
     let rows = this.data.split('\n');
-    let createMultiClasses = rows.map(row => {
-      let columns = row.split('\t');
-      if (row.length >= 3) {
-        this.createClasses(columns[1].trim());
+    for (let i = 0; i < rows.length; i++) {
+      let columns = rows[i].split('\t');
+      if (rows[i].length >= 3) {
+        classNames.push(columns[1].trim());
       }
-    });
-    Promise.all(createMultiClasses).then(() => {
+    }
+    let result = classNames.reduce((createMultiPromise, nextName) => {
+      return createMultiPromise.then(async () => {
+        return await this.createClasses(nextName);
+      });
+    }, Promise.resolve());
+    result.then(() => {
       this.notificationService.showSuccessMessage('Tạo thành công!');
       this.data = '';
     }).catch(() => {
