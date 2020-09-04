@@ -6,7 +6,6 @@ import {AuthenticationService} from '../../service/authentication/authentication
 import {NotificationService} from '../../service/notification/notification.service';
 
 declare var $: any;
-declare var Swal: any;
 
 @Component({
   selector: 'app-lecture-list',
