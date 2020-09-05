@@ -561,11 +561,10 @@ export class StudentInfoComponent implements OnInit {
   ];
 
   buildPortfolioGeneralAssessment = (evaluations, student) => {
-    const date = new Date();
     return [
       {
         text: '\nI. ĐÁNH GIÁ CHUNG\n' +
-          '1. Mức độ đánh giá (3) ' + evaluations.evaluation,
+          '1. Mức độ đánh giá (3) \n' + evaluations.evaluation,
         fontSize: 12,
         bold: true,
         margin: [0, 0, 0, 20]
@@ -576,19 +575,20 @@ export class StudentInfoComponent implements OnInit {
         bold: true
       },
       {
-        text: 'Điểm mạnh:\n' + evaluations.advantages != null ? evaluations.advantages : '',
+        text: 'Điểm mạnh:\n' + (evaluations.advantages != null ? evaluations.advantages : ''),
         fontSize: 12,
-        italic: true,
+        italics: true,
       },
       {
-        text: 'Điểm yếu:\n' + evaluations.achiles != null ? evaluations.achiles : '',
+        text: 'Điểm yếu:\n' + (evaluations.achiles != null ? evaluations.achiles : ''),
         fontSize: 12,
-        italic: true,
+        italics: true,
         margin: [0, 0, 0, 10]
       },
       {
-        text: 'Gợi ý cho doanh nghiệp:\n' + evaluations.suggestion != null ? evaluations.suggestion : '',
+        text: 'Gợi ý cho doanh nghiệp:' + (evaluations.suggestion != null ? '\n' + evaluations.suggestion : '..........................'),
         fontSize: 12,
+        italics: true,
         margin: [0, 0, 0, 70]
       },
       {
@@ -633,158 +633,157 @@ export class StudentInfoComponent implements OnInit {
     margin: [0, 0, 0, 20]
   });
 
-  buildPortfolioOutcome = (program, evaluations) => (
-    {
-      margin: [0, 0, 0, 20],
-      table: {
-        widths: program.toUpperCase().includes('JAVA') ? [35, 'auto', 45, 45, 45, 45, 45, 45]
-          : [40, 'auto', 40, 40, 40, 40, 40],
-        heights: [20],
-        body: [
-          [
-            {
-              text: '\nCHUẨN ĐẦU RA\n ',
-              style: 'tableHeader',
-              colSpan: 2,
-              alignment: 'center',
-              fontSize: 11,
-              bold: true,
-              fillColor: '#2e6ad1',
-              color: 'white'
-            },
-            {},
-            {
-              text: '\nĐÁNH GIÁ\n ',
-              style: 'tableHeader',
-              colSpan: program.toUpperCase().includes('JAVA') ? 6 : 5,
-              alignment: 'center',
-              fontSize: 11,
-              bold: true,
-              fillColor: '#2e6ad1',
-              color: 'white'
-            },
-            {}, {}, {}, {}, program.toUpperCase().includes('JAVA') ? {} : ''
-          ],
-          ...this.array.map(array => {
-            if (array.title != undefined) {
-              if (array.title.toUpperCase().includes('PHẦN 1')) {
-                return [{
-                  text: array.title,
-                  colSpan: 2,
-                  alignment: 'left',
-                  bold: true,
-                  fontSize: 11,
-                }, {},
-                  {
-                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
-                    alignment: 'left',
-                    bold: true,
-                    fontSize: 8,
-                  },
-                  {
-                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
-                    alignment: 'left',
-                    bold: true,
-                    fontSize: 8,
-                  },
-                  {
-                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
-                    alignment: 'left',
-                    bold: true,
-                    fontSize: 8,
-                  },
-                  {
-                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
-                    alignment: 'left',
-                    bold: true,
-                    fontSize: 8,
-                  },
-                  {
-                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
-                    alignment: 'left',
-                    bold: true,
-                    fontSize: 8,
-                  },
-                  program.toUpperCase().includes('JAVA') ? {
-                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
-                    alignment: 'left',
-                    bold: true,
-                    fontSize: 8,
-                  } : ''];
-              } else {
-                return [{
-                  text: array.title,
-                  style: 'tableHeader',
-                  colSpan: program.toUpperCase().includes('JAVA') ? 8 : 7,
-                  alignment: 'left',
-                  bold: true,
-                  fontSize: 11,
-                }, {},
-                  {}, {}, {}, {}, {}, program.toUpperCase().includes('JAVA') ? {} : ''];
-              }
-            } else if (array.categoryId != undefined) {
+  buildPortfolioOutcome = (program, evaluations) => ({
+    margin: [0, 0, 0, 20],
+    table: {
+      widths: program.toUpperCase().includes('JAVA') ? [30, 120, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto']
+        : [40, 'auto', 40, 40, 40, 40, 40],
+      heights: [20],
+      body: [
+        [
+          {
+            text: '\nCHUẨN ĐẦU RA\n ',
+            style: 'tableHeader',
+            colSpan: 2,
+            alignment: 'center',
+            fontSize: 11,
+            bold: true,
+            fillColor: '#2e6ad1',
+            color: 'white'
+          },
+          {},
+          {
+            text: '\nĐÁNH GIÁ\n ',
+            style: 'tableHeader',
+            colSpan: program.toUpperCase().includes('JAVA') ? 6 : 5,
+            alignment: 'center',
+            fontSize: 11,
+            bold: true,
+            fillColor: '#2e6ad1',
+            color: 'white'
+          },
+          {}, {}, {}, {}, program.toUpperCase().includes('JAVA') ? {} : ''
+        ],
+        ...this.array.map(array => {
+          if (array.title != undefined) {
+            if (array.title.toUpperCase().includes('PHẦN 1')) {
               return [{
-                text: array.categoryId,
-                style: 'tableHeader',
-                alignment: 'right',
+                text: array.title,
+                colSpan: 2,
+                alignment: 'left',
                 bold: true,
                 fontSize: 11,
-              },
+              }, {},
                 {
-                  text: array.name,
-                  style: 'tableHeader',
+                  text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
                   alignment: 'left',
-                  colSpan: program.toUpperCase().includes('JAVA') ? 7 : 6,
                   bold: true,
-                  fontSize: 11,
-                }, {}, {}, {}, {}, {}, program.toUpperCase().includes('JAVA') ? {} : ''];
+                  fontSize: 8,
+                },
+                {
+                  text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
+                  alignment: 'left',
+                  bold: true,
+                  fontSize: 8,
+                },
+                {
+                  text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
+                  alignment: 'left',
+                  bold: true,
+                  fontSize: 8,
+                },
+                {
+                  text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
+                  alignment: 'left',
+                  bold: true,
+                  fontSize: 8,
+                },
+                {
+                  text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
+                  alignment: 'left',
+                  bold: true,
+                  fontSize: 8,
+                },
+                program.toUpperCase().includes('JAVA') ? {
+                  text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
+                  alignment: 'left',
+                  bold: true,
+                  fontSize: 8,
+                } : ''];
+            } else {
+              return [{
+                text: array.title,
+                style: 'tableHeader',
+                colSpan: program.toUpperCase().includes('JAVA') ? 8 : 7,
+                alignment: 'left',
+                bold: true,
+                fontSize: 11,
+              }, {},
+                {}, {}, {}, {}, {}, program.toUpperCase().includes('JAVA') ? {} : ''];
             }
-            return [
-              {
-                text: array.skillId,
-                alignment: 'right',
-                fontSize: 10,
-              },
+          } else if (array.categoryId != undefined) {
+            return [{
+              text: array.categoryId,
+              style: 'tableHeader',
+              alignment: 'right',
+              bold: true,
+              fontSize: 11,
+            },
               {
                 text: array.name,
+                style: 'tableHeader',
                 alignment: 'left',
-                fontSize: 10,
-              },
-              {
-                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
-                alignment: 'left',
-                fontSize: 10,
-              },
-              {
-                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
-                alignment: 'left',
-                fontSize: 10,
-              },
-              {
-                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
-                alignment: 'left',
-                fontSize: 10,
-              },
-              {
-                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
-                alignment: 'left',
-                fontSize: 10,
-              },
-              {
-                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
-                alignment: 'left',
-                fontSize: 10,
-              },
-              program.toUpperCase().includes('JAVA') ? {
-                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
-                alignment: 'left',
-                fontSize: 10,
-              } : ''
-            ];
-          })
-        ],
-      }
-    });
+                colSpan: program.toUpperCase().includes('JAVA') ? 7 : 6,
+                bold: true,
+                fontSize: 11,
+              }, {}, {}, {}, {}, {}, program.toUpperCase().includes('JAVA') ? {} : ''];
+          }
+          return [
+            {
+              text: array.skillId,
+              alignment: 'right',
+              fontSize: 10,
+            },
+            {
+              text: array.name,
+              alignment: 'left',
+              fontSize: 10,
+            },
+            {
+              text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
+              alignment: 'center',
+              fontSize: 10,
+            },
+            {
+              text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
+              alignment: 'center',
+              fontSize: 10,
+            },
+            {
+              text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
+              alignment: 'center',
+              fontSize: 10,
+            },
+            {
+              text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
+              alignment: 'center',
+              fontSize: 10,
+            },
+            {
+              text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
+              alignment: 'center',
+              fontSize: 10,
+            },
+            program.toUpperCase().includes('JAVA') ? {
+              text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
+              alignment: 'center',
+              fontSize: 10,
+            } : ''
+          ];
+        })
+      ],
+    }
+  });
 
   buildPortfolioOnlineCourse = () => ({
     table: {

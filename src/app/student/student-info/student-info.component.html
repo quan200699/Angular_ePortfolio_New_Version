@@ -281,8 +281,7 @@
                       </a>
                     </td>
                     <td>
-                      {{evaluations.createDate.getUTCDate()}} - {{evaluations.createDate.getUTCMonth() + 1}}
-                      - {{evaluations.createDate.getUTCFullYear()}}
+                      {{convertDateToString(evaluations.createDate)}}
                     </td>
                     <td *ngIf="hasRoleAdmin">
                       <div class="row">
