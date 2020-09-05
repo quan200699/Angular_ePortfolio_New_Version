@@ -3,4 +3,5 @@ export interface Skill {
   skillId?: string;
   name?: string;
   category?: any;
+  evaluations?: any;
 }

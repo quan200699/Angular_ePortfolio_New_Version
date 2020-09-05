@@ -78,7 +78,8 @@
                     </option>
                     <option *ngFor="let evaluation of listEvaluation" [value]="evaluation"
                             [selected]="evaluationChoice==evaluation|| evaluationCategoryChoice[j] == evaluation
-                             || evaluationOutcomeChoice[i] == evaluation">{{evaluation}}</option>
+                             || evaluationOutcomeChoice[i] == evaluation||(skill.evaluations!=null &&
+                              skill.evaluations.evaluation == evaluation)">{{evaluation}}</option>
                   </select>
                 </div>
               </div>

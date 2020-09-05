@@ -64,6 +64,9 @@ export class EvaluationsInfoComponent implements OnInit {
         outcome.categories = await this.getAllCategoryByOutcome(outcome.id);
         outcome.categories.map(async category => {
           category.skills = await this.getAllSkillByCategory(category.id);
+          category.skills.map(async skill => {
+            skill.evaluations = await this.getEvaluationDetailByEvaluationAndSkill(this.id, skill.id);
+          });
         });
       });
     });
@@ -197,5 +200,10 @@ export class EvaluationsInfoComponent implements OnInit {
     this.evaluationChoice = null;
     this.evaluationCategoryChoice = [];
     this.evaluationOutcomeChoice = [];
+    this.getAllOutcome();
+  }
+
+  getEvaluationDetailByEvaluationAndSkill(id: number, skillId: number) {
+    return this.evaluationService.getAllEvaluationsDetailByEvaluationAndSkill(id, skillId).toPromise();
   }
 }
