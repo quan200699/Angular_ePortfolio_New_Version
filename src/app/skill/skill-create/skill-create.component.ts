@@ -73,15 +73,15 @@ export class SkillCreateComponent implements OnInit {
   }
 
   getCategoryName(): string[] {
-    let data = this.data;
     let listCategory;
     let categoryName = [];
     let isSkill = /[1-9].[0-9]{1,2}.[0-9]{1,2}/;
-    listCategory = data.split('\n');
+    let isCategory = /[1-9].[0-9]{1,2}/;
+    listCategory = this.data.split('\n');
     for (let category of listCategory) {
       if (!isSkill.test(category)) {
-        const row = category.split('\t');
-        if (row.length == 2) {
+        const row = category.trim().split('\t');
+        if (row.length == 2 && isCategory.test(row)) {
           categoryName.push(category);
         }
       }
