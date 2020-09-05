@@ -287,17 +287,20 @@
                     <td *ngIf="hasRoleAdmin">
                       <div class="row">
                         <div class="col-4">
-                          <a (click)="generatePdf('open')" class="btn btn-block btn-success" style="color: white">
+                          <a (click)="generatePdf('open',student)" class="btn btn-block btn-success"
+                             style="color: white">
                             <i class="fas fa-file-export"></i>
                           </a>
                         </div>
                         <div class="col-4">
-                          <a [routerLink]="['edit',evaluations.id]" class="btn btn-block btn-primary" style="color: white">
+                          <a [routerLink]="['edit',evaluations.id]" class="btn btn-block btn-primary"
+                             style="color: white">
                             <i class="fas fa-edit"></i>
                           </a>
                         </div>
                         <div class="col-4">
-                          <button type="button" class="btn btn-block btn-danger" style="color: white" data-toggle="modal"
+                          <button type="button" class="btn btn-block btn-danger" style="color: white"
+                                  data-toggle="modal"
                                   data-target="#modal-delete2" (click)="getEvaluationId(evaluations.id)">
                             <i class="fas fa-trash"></i>
                           </button>

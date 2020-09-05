@@ -292,8 +292,8 @@ export class StudentInfoComponent implements OnInit {
     });
   }
 
-  generatePdf(action) {
-    const documentDefinition = this.getDocumentDefinition();
+  generatePdf(action, student) {
+    const documentDefinition = this.getDocumentDefinition(student);
     switch (action) {
       case 'open':
         pdfMake.createPdf(documentDefinition).open();
@@ -310,11 +310,11 @@ export class StudentInfoComponent implements OnInit {
     }
   }
 
-  getDocumentDefinition() {
+  getDocumentDefinition(student) {
     return {
       pageMargins: [70, 120, 65, 60],
       header: this.buildPortfolioHeader(),
-      content: this.buildPortfolioContent(),
+      content: this.buildPortfolioContent(student),
       footer: this.buildPortfolioFooter()
     };
   }
@@ -332,21 +332,25 @@ export class StudentInfoComponent implements OnInit {
     }
   ];
 
-  buildPortfolioContent = () => {
+  buildPortfolioContent = (student) => {
     let title = '';
-    if (this.student.classes != null) {
-      if (this.student.classes.program != null) {
-        if (this.student.classes.program.name.toUpperCase().includes('JAVA')) {
-          title = 'BOOTCAMP JAVA';
-        } else {
-          title = 'BOOTCAMP PHP';
+    let program = '';
+    if (student.classes != null) {
+      if (student.classes.module != null) {
+        if (student.classes.module.program != null) {
+          if (student.classes.module.program.name.toUpperCase().includes('JAVA')) {
+            title = 'BOOTCAMP JAVA';
+          } else {
+            title = 'BOOTCAMP PHP';
+          }
+          program = student.classes.module.program.name;
         }
       }
     }
     return [
       this.buildPortfolioTitle(title),
       this.buildPortfolioDescription(),
-      this.buildPortfolioInfo(),
+      this.buildPortfolioInfo(student, program),
       this.buildPortfolioGeneralAssessment(),
       this.buildPortfolioDetail()
     ];
@@ -383,35 +387,35 @@ export class StudentInfoComponent implements OnInit {
     margin: [0, 0, 0, 5]
   });
 
-  buildPortfolioInfo = () => ({
+  buildPortfolioInfo = (student, program) => ({
     columns: [
       [
         {
-          text: 'Huấn luyện viên: ',
+          text: 'Huấn luyện viên: ' + (student.classes != null ? (student.classes.lecture != null ? (student.classes.lecture.name) : '') : ''),
           fontSize: 12,
           bold: true,
           margin: [0, 0, 0, 5]
         },
         {
-          text: 'Học viên: ',
+          text: 'Học viên: ' + student.name,
           fontSize: 12,
           bold: true,
           margin: [0, 0, 0, 5]
         },
         {
-          text: 'Mã học viên: ',
+          text: 'Mã học viên: ' + student.studentId,
           fontSize: 12,
           bold: true,
           margin: [0, 0, 0, 5]
         },
         {
-          text: 'Lớp: ',
+          text: 'Lớp: ' + (student.classes != null ? student.classes.name : ''),
           fontSize: 12,
           bold: true,
           margin: [0, 0, 0, 5]
         },
         {
-          text: 'Chương trình học: ',
+          text: 'Chương trình học: ' + program,
           fontSize: 12,
           bold: true,
           margin: [0, 0, 0, 5]
@@ -557,7 +561,7 @@ export class StudentInfoComponent implements OnInit {
                 bold: true
               },
               {
-                text: onlineCourse.complete?'Đã có chứng chỉ':'Chưa có chứng chỉ',
+                text: onlineCourse.complete ? 'Đã có chứng chỉ' : 'Chưa có chứng chỉ',
                 alignment: 'left',
                 fontSize: 12,
                 bold: true
