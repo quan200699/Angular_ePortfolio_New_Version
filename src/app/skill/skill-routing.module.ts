@@ -1,8 +1,20 @@
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+import {SkillListComponent} from './skill-list/skill-list.component';
+import {SkillCreateComponent} from './skill-create/skill-create.component';
 
 
-const routes: Routes = []
+const routes: Routes = [
+  {
+    path: '',
+    component: SkillListComponent
+  },
+  {
+    path: 'create',
+    component: SkillCreateComponent
+  }
+];
+
 @NgModule({
   declarations: [],
   imports: [
@@ -10,4 +22,5 @@ const routes: Routes = []
   ],
   exports: [RouterModule]
 })
-export class SkillRoutingModule { }
+export class SkillRoutingModule {
+}

@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {Category} from '../../interface/category';
+
 const API_URL = `${environment.apiUrl}`;
 
 @Injectable({
@@ -22,14 +23,18 @@ export class CategoryService {
   }
 
   getCategory(id: number): Observable<Category> {
-    return this.http.get<Category>(API_URL + `/categories/${id}`)
+    return this.http.get<Category>(API_URL + `/categories/${id}`);
   }
 
   updateCategory(id: number, category: Category): Observable<Category> {
-    return this.http.put<Category>(API_URL + `/categories/${id}`, category)
+    return this.http.put<Category>(API_URL + `/categories/${id}`, category);
   }
 
   deleteCategory(id: number): Observable<Category> {
     return this.http.delete<Category>(API_URL + `/categories/${id}`);
+  }
+
+  findByCategoryName(name: string): Observable<Category> {
+    return this.http.get<Category>(API_URL + '/categories/name?name=' + name);
   }
 }
