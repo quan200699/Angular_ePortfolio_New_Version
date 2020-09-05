@@ -276,7 +276,9 @@
                   <tr *ngFor="let evaluations of listEvaluations; index as i">
                     <td>{{i + 1}}</td>
                     <td>
-                      {{evaluations.name}}
+                      <a [routerLink]="['../../../evaluations/info',evaluations.id]">
+                        {{evaluations.name}}
+                      </a>
                     </td>
                     <td>
                       {{evaluations.createDate.getUTCDate()}} - {{evaluations.createDate.getUTCMonth() + 1}}

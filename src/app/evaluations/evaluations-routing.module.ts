@@ -1,14 +1,18 @@
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {EvaluationsInfoComponent} from './evaluations-info/evaluations-info.component';
 
 
 const routes: Routes = [
   {
+    path: ''
+  },
+  {
     path: 'info/:id',
     component: EvaluationsInfoComponent
   }
 ];
+
 @NgModule({
   declarations: [],
   imports: [
@@ -16,4 +20,5 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class EvaluationsRoutingModule { }
+export class EvaluationsRoutingModule {
+}
