@@ -693,8 +693,7 @@ export class StudentInfoComponent implements OnInit {
       }
     });
 
-  buildPortfolioOnlineCourse = () => (
-    {
+  buildPortfolioOnlineCourse = () => ({
       table: {
         widths: [40, '*', 'auto'],
         body: [
