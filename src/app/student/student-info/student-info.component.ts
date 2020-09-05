@@ -18,6 +18,12 @@ import {EvaluationsService} from '../../service/evaluations/evaluations.service'
 import * as pdfMakeConfig from 'pdfmake/build/pdfmake.js';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
 import * as pdfMake from 'pdfmake/build/pdfmake';
+import {OutcomeService} from '../../service/outcome/outcome.service';
+import {CategoryService} from '../../service/category/category.service';
+import {SkillService} from '../../service/skill/skill.service';
+import {Category} from '../../interface/category';
+import {Skill} from '../../interface/skill';
+import {Outcome} from '../../interface/outcome';
 
 pdfMakeConfig.vfs = pdfFonts.pdfMake.vfs;
 
@@ -59,6 +65,8 @@ export class StudentInfoComponent implements OnInit {
   };
   listEvaluations: Evaluations[] = [];
   evaluationId: number;
+  listOutcome: Outcome[] = [];
+  array: any[] = [];
 
   constructor(private activatedRoute: ActivatedRoute,
               private studentService: StudentService,
@@ -68,7 +76,10 @@ export class StudentInfoComponent implements OnInit {
               private onlineCourseService: OnlineCourseService,
               private certificateService: CertificateService,
               private descriptionService: DescriptionService,
-              private evaluationService: EvaluationsService) {
+              private evaluationService: EvaluationsService,
+              private outcomeService: OutcomeService,
+              private categoryService: CategoryService,
+              private skillService: SkillService) {
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
       this.id = +paramMap.get('id');
       this.getStudent(this.id);
@@ -86,6 +97,7 @@ export class StudentInfoComponent implements OnInit {
       }
     }
     this.getAllOnlineCourse();
+    this.getAllOutcome();
   }
 
   ngOnInit() {
@@ -292,6 +304,94 @@ export class StudentInfoComponent implements OnInit {
     });
   }
 
+  getAllCategoryByOutcome(id: number) {
+    return this.outcomeService.getAllCategoryByOutcome(id).toPromise();
+  }
+
+  getAllSkillByCategory(id: number) {
+    return this.categoryService.getAllSkillByCategory(id).toPromise();
+  }
+
+  getEvaluationDetailByEvaluationAndSkill(id: number, skillId: number) {
+    return this.evaluationService.getAllEvaluationsDetailByEvaluationAndSkill(id, skillId).toPromise();
+  }
+
+  async getAllOutcome() {
+    let listOutcome = await this.outcomeService.getAllOutcome().toPromise();
+    this.sortOutcome(listOutcome);
+    for (let i = 0; i < listOutcome.length; i++) {
+      this.array.push(listOutcome[i]);
+      let categoryList = await this.outcomeService.getAllCategoryByOutcome(listOutcome[i].id).toPromise();
+      this.sortCategory(categoryList);
+      for (let j = 0; j < categoryList.length; j++) {
+        this.array.push(categoryList[j]);
+        let skillList = await this.categoryService.getAllSkillByCategory(categoryList[j].id).toPromise();
+        this.sortSkill(skillList);
+        for (let k = 0; k < skillList.length; k++) {
+          skillList[k].evaluations = await this.getEvaluationDetailByEvaluationAndSkill(this.id, skillList[k].id);
+          this.array.push(skillList[k]);
+        }
+      }
+    }
+  }
+
+  sortOutcome(outcomeList) {
+    for (let i = 0; i < outcomeList.length; i++) {
+      for (let j = i + 1; j < outcomeList.length; j++) {
+        let indexFirst = outcomeList[i].title.split('')[5];
+        let indexSecond = outcomeList[j].title.split('')[5];
+        if (Number(indexFirst) > Number(indexSecond)) {
+          let temp = outcomeList[i];
+          outcomeList[i] = outcomeList[j];
+          outcomeList[j] = temp;
+        }
+      }
+    }
+  }
+
+  sortCategory(categoryList) {
+    for (let i = 0; i < categoryList.length; i++) {
+      for (let j = i + 1; j < categoryList.length; j++) {
+        let indexFirst = categoryList[i].categoryId.split('.')[1];
+        let indexSecond = categoryList[j].categoryId.split('.')[1];
+        if (Number(indexFirst) > Number(indexSecond)) {
+          let temp = categoryList[i];
+          categoryList[i] = categoryList[j];
+          categoryList[j] = temp;
+        }
+      }
+    }
+  }
+
+  sortSkill(skillList) {
+    for (let i = 0; i < skillList.length; i++) {
+      for (let j = i + 1; j < skillList.length; j++) {
+        let indexFirst = skillList[i].skillId.split('.')[1];
+        let indexSecond = skillList[j].skillId.split('.')[1];
+        if (Number(indexFirst) > Number(indexSecond)) {
+          let temp = skillList[i];
+          skillList[i] = skillList[j];
+          skillList[j] = temp;
+        }
+      }
+    }
+    for (let i = 0; i < skillList.length; i++) {
+      for (let j = i + 1; j < skillList.length; j++) {
+        let indexFirst = skillList[i].skillId.split('.')[2];
+        let indexSecond = skillList[j].skillId.split('.')[2];
+        if (Number(indexFirst) > Number(indexSecond)) {
+          let temp = skillList[i];
+          skillList[i] = skillList[j];
+          skillList[j] = temp;
+        }
+      }
+    }
+  }
+
+  getAllOutcomeToPromise() {
+    return this.outcomeService.getAllOutcome().toPromise();
+  }
+
   generatePdf(action, student, evaluations) {
     const documentDefinition = this.getDocumentDefinition(student, evaluations);
     switch (action) {
@@ -352,7 +452,7 @@ export class StudentInfoComponent implements OnInit {
       this.buildPortfolioDescription(),
       this.buildPortfolioInfo(student, program),
       this.buildPortfolioGeneralAssessment(evaluations, student),
-      this.buildPortfolioDetail()
+      this.buildPortfolioDetail(program)
     ];
   };
 
@@ -476,7 +576,8 @@ export class StudentInfoComponent implements OnInit {
         margin: [0, 0, 0, 70]
       },
       {
-        text: '\nHà Nội, ngày ' + date.getUTCDate() + ' tháng ' + (date.getMonth() + 1) + ' năm ' + date.getUTCFullYear(),
+        text: '\nHà Nội, ngày ' + evaluations.createDate.getUTCDate() + ' tháng '
+          + (evaluations.createDate.getMonth() + 1) + ' năm ' + evaluations.createDate.getUTCFullYear(),
         alignment: 'right',
         fontSize: 12,
       },
@@ -497,9 +598,10 @@ export class StudentInfoComponent implements OnInit {
     ];
   };
 
-  buildPortfolioDetail = () => ([
+  buildPortfolioDetail = (program) => ([
       this.buildPortfolioDetailedAssessment(),
-      this.buildPortfolioOutcome(),
+      this.buildPortfolioOutcome(program),
+      this.buildPortfolioOnlineCourseText(),
       this.buildPortfolioOnlineCourse(),
       this.buildPortfolioAddendum(),
       this.buildPortfolioProductTable(),
@@ -515,69 +617,145 @@ export class StudentInfoComponent implements OnInit {
     margin: [0, 0, 0, 20]
   });
 
-  buildPortfolioOutcome = () => '';
-
-  buildPortfolioOnlineCourse = () => ({
-    table: {
-      widths: [40, '*', 'auto'],
-      body: [
-        [
-          {
-            text: '\nSTT',
-            style: 'tableHeader',
-            alignment: 'center',
-            fontSize: 12,
-            bold: true
-          },
-          {
-            text: '\nKhóa học',
-            style: 'tableHeader',
-            alignment: 'center',
-            fontSize: 12,
-            bold: true
-          },
-          {
-            text: 'Đánh giá\n' +
-              '(Đã có chứng chỉ hoàn thành, Chưa có chứng\n chỉ hoàn thành)\n',
-            style: 'tableHeader',
-            alignment: 'center',
-            fontSize: 12,
-            bold: true
-          }
+  buildPortfolioOutcome = (program) => (
+    {
+      margin: [0, 0, 0, 20],
+      table: {
+        widths: [40, '*', 80],
+        heights: [20],
+        body: [
+          [
+            {
+              text: 'CHUẨN ĐẦU RA',
+              style: 'tableHeader',
+              colSpan: 2,
+              alignment: 'center',
+              fontSize: 11,
+              bold: true,
+              fillColor: '#2e6ad1',
+              color: 'white'
+            },
+            {},
+            {
+              text: 'ĐÁNH GIÁ',
+              style: 'tableHeader',
+              alignment: 'center',
+              fontSize: 11,
+              bold: true,
+              fillColor: '#2e6ad1',
+              color: 'white'
+            }
+          ],
+          ...this.array.map(array => {
+            if (array.title != undefined) {
+              return [{
+                text: array.title,
+                style: 'tableHeader',
+                colSpan: 3,
+                alignment: 'left',
+                bold: true,
+                fontSize: 11,
+              }, {}, {}];
+            } else if (array.categoryId != undefined) {
+              return [{
+                text: array.categoryId,
+                style: 'tableHeader',
+                alignment: 'right',
+                bold: true,
+                fontSize: 11,
+              },
+                {
+                  text: array.name,
+                  style: 'tableHeader',
+                  alignment: 'left',
+                  colSpan: 2,
+                  bold: true,
+                  fontSize: 11,
+                }, {}];
+            }
+            return [{
+              text: array.skillId,
+              alignment: 'right',
+              fontSize: 10,
+            },
+              {
+                text: array.name,
+                alignment: 'left',
+                fontSize: 10,
+              },
+              {
+                text: array.evaluations != null ? array.evaluations.evaluation : '',
+                alignment: 'left',
+                fontSize: 10,
+              }];
+          })
         ],
-        ...this.listOnlineCourses.map(onlineCourse => {
-          {
-            return [
-              {
-                text: onlineCourse.id,
-                alignment: 'center',
-                fontSize: 12,
-                bold: true
-              },
-              {
-                text: onlineCourse.name,
-                alignment: 'left',
-                fontSize: 12,
-                bold: true
-              },
-              {
-                text: onlineCourse.complete ? 'Đã có chứng chỉ' : 'Chưa có chứng chỉ',
-                alignment: 'left',
-                fontSize: 12,
-                bold: true
-              }
-            ];
-          }
-        })
-      ]
-    }
-  });
+      }
+    });
+
+  buildPortfolioOnlineCourse = () => (
+    {
+      table: {
+        widths: [40, '*', 'auto'],
+        body: [
+          [
+            {
+              text: '\nSTT',
+              style: 'tableHeader',
+              alignment: 'center',
+              fontSize: 12,
+              bold: true
+            },
+            {
+              text: '\nKhóa học',
+              style: 'tableHeader',
+              alignment: 'center',
+              fontSize: 12,
+              bold: true
+            },
+            {
+              text: 'Đánh giá\n' +
+                '(Đã có chứng chỉ hoàn thành, Chưa có chứng\n chỉ hoàn thành)\n',
+              style: 'tableHeader',
+              alignment: 'center',
+              fontSize: 12,
+              bold: true
+            }
+          ],
+          ...this.listOnlineCourses.map(onlineCourse => {
+            {
+              return [
+                {
+                  text: onlineCourse.id,
+                  alignment: 'center',
+                  fontSize: 12,
+                  bold: true
+                },
+                {
+                  text: onlineCourse.name,
+                  alignment: 'left',
+                  fontSize: 12,
+                  bold: true
+                },
+                {
+                  text: onlineCourse.complete ? 'Đã có chứng chỉ' : 'Chưa có chứng chỉ',
+                  alignment: 'left',
+                  fontSize: 12,
+                  bold: true
+                }
+              ];
+            }
+          })
+        ]
+      }
+    });
 
   buildPortfolioAddendum = () => ({
-    text: 'III. PHỤ LỤC',
+    text: 'III. PHỤ LỤC\n' +
+      'Những sản phẩm/dự án đã đạt được',
     fontSize: 12,
     bold: true,
-    margin: [0, 20, 0, 0]
+    margin: [0, 20, 0, 20]
   });
 
   buildPortfolioProductTable = () => ({
@@ -781,5 +959,12 @@ export class StudentInfoComponent implements OnInit {
         margin: [25, 5, 0, 0]
       }
     ]
+  });
+
+  buildPortfolioOnlineCourseText = () => ({
+    text: '2/  HOÀN THÀNH CÁC KHOÁ HỌC ONLINE\n',
+    fontSize: 12,
+    bold: true,
+    margin: [0, 0, 0, 20],
   });
 }

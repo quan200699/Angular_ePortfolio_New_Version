@@ -51,6 +51,7 @@ export class EvaluationsInfoComponent implements OnInit {
   getEvaluation(id) {
     this.evaluationService.getEvaluations(id).subscribe(evaluation => {
       this.evaluation = evaluation;
+      this.evaluation.createDate = new Date(this.evaluation.createDate);
     });
   }
 
