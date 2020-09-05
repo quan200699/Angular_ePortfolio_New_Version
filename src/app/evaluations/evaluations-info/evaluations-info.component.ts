@@ -9,6 +9,7 @@ import {OutcomeService} from '../../service/outcome/outcome.service';
 import {EvaluationsService} from '../../service/evaluations/evaluations.service';
 import {Evaluations} from '../../interface/evaluations';
 import {Skill} from '../../interface/skill';
+import {NotificationService} from '../../service/notification/notification.service';
 
 @Component({
   selector: 'app-evaluations-info',
@@ -33,7 +34,8 @@ export class EvaluationsInfoComponent implements OnInit {
               private skillService: SkillService,
               private categoryService: CategoryService,
               private outcomeService: OutcomeService,
-              private evaluationService: EvaluationsService) {
+              private evaluationService: EvaluationsService,
+              private notificationService: NotificationService) {
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
       this.id = +paramMap.get('id');
       this.getEvaluation(this.id);
@@ -43,6 +45,7 @@ export class EvaluationsInfoComponent implements OnInit {
   ngOnInit() {
     this.getAllOutcome();
     this.getAllCategory();
+    this.getAllSkill();
   }
 
   getEvaluation(id) {
@@ -74,8 +77,18 @@ export class EvaluationsInfoComponent implements OnInit {
     return this.categoryService.getAllSkillByCategory(id).toPromise();
   }
 
-  createMultiEvaluationDetail() {
-
+  createMultiEvaluationDetail(listEvaluationDetail: EvaluationsDetail[]) {
+    let result = listEvaluationDetail.reduce((createMultiPromise, evaluationDetail) => {
+      return createMultiPromise.then(async () => {
+        return await this.createEvaluationDetail(evaluationDetail);
+      });
+    }, Promise.resolve());
+    result.then(() => {
+      this.notificationService.showSuccessMessage('Đánh giá thành công!');
+      this.clearAll();
+    }).catch(() => {
+      this.notificationService.showErrorMessage('Đánh giá thất bại!');
+    });
   }
 
   setAllEvaluation() {
@@ -96,36 +109,42 @@ export class EvaluationsInfoComponent implements OnInit {
 
   setAllEvaluationByOutcome(id: any, index: number) {
     this.outcomeService.getAllCategoryByOutcome(id).subscribe(categoryList => {
-      categoryList.map(category => {
-        this.categoryService.getAllSkillByCategory(category.id).subscribe(skillList => {
+      for (let j = 0; j < categoryList.length; j++) {
+        this.categoryService.getAllSkillByCategory(categoryList[j].id).subscribe(skillList => {
           for (let i = 0; i < skillList.length; i++) {
-            this.listEvaluationDetail[i] = {
-              evaluations: {
-                id: this.evaluation.id
-              },
-              skill: {
-                id: skillList[i].id
-              },
-              evaluation: this.evaluationOutcomeChoice[index]
-            };
+            for (let k = 0; k < this.listEvaluationDetail.length; k++) {
+              if (skillList[i].id == this.listEvaluationDetail[k].skill.id) {
+                this.listEvaluationDetail[k] = {
+                  evaluations: {
+                    id: this.evaluation.id
+                  },
+                  skill: {
+                    id: skillList[i].id
+                  },
+                  evaluation: this.evaluationOutcomeChoice[index]
+                };
+              }
+            }
           }
         });
-      });
+      }
     });
   }
 
   setAllEvaluationByCategory(id: number, index: number) {
     this.categoryService.getAllSkillByCategory(id).subscribe(skillList => {
       for (let i = 0; i < skillList.length; i++) {
-        this.listEvaluationDetail[i] = {
-          evaluations: {
-            id: this.evaluation.id
-          },
-          skill: {
-            id: skillList[i].id
-          },
-          evaluation: this.evaluationCategoryChoice[index]
-        };
+        if (skillList[i].id == this.listEvaluationDetail[i].skill.id) {
+          this.listEvaluationDetail[i] = {
+            evaluations: {
+              id: this.evaluation.id
+            },
+            skill: {
+              id: skillList[i].id
+            },
+            evaluation: this.evaluationCategoryChoice[index]
+          };
+        }
       }
     });
   }
@@ -147,8 +166,8 @@ export class EvaluationsInfoComponent implements OnInit {
     }
   }
 
-  createEvaluationDetail(evaluationDetail: EvaluationsDetail) {
-    return this.evaluationDetailService.createEvaluationsDetail(evaluationDetail).toPromise();
+  async createEvaluationDetail(evaluationDetail: EvaluationsDetail) {
+    return await this.evaluationDetailService.createEvaluationsDetail(evaluationDetail).toPromise();
   }
 
   getAllCategory() {
@@ -157,5 +176,26 @@ export class EvaluationsInfoComponent implements OnInit {
         this.evaluationCategoryChoice[i] = null;
       }
     });
+  }
+
+  getAllSkill() {
+    this.skillService.getAllSkill().subscribe(listSkill => {
+      for (let i = 0; i < listSkill.length; i++) {
+        let evaluationDetail: EvaluationsDetail = {
+          skill: listSkill[i],
+          evaluations: this.evaluation,
+          evaluation: 'N/A'
+        };
+        this.listEvaluationDetail.push(evaluationDetail);
+      }
+    });
+  }
+
+  clearAll() {
+    this.listEvaluationDetail = [];
+    this.getEvaluation(this.id);
+    this.evaluationChoice = null;
+    this.evaluationCategoryChoice = [];
+    this.evaluationOutcomeChoice = [];
   }
 }
