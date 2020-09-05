@@ -392,6 +392,22 @@ export class StudentInfoComponent implements OnInit {
     return this.outcomeService.getAllOutcome().toPromise();
   }
 
+  convertDateToString(date: Date): string {
+    let term = '';
+    let month = date.getUTCMonth() + 1;
+    let day = date.getUTCDate();
+    if (day < 10) {
+      term += '0';
+    }
+    term += day + '/';
+    if (month < 10) {
+      term += '0';
+    }
+    term += month + '/';
+    term += date.getUTCFullYear();
+    return term;
+  }
+
   generatePdf(action, student, evaluations) {
     const documentDefinition = this.getDocumentDefinition(student, evaluations);
     switch (action) {
@@ -452,7 +468,7 @@ export class StudentInfoComponent implements OnInit {
       this.buildPortfolioDescription(),
       this.buildPortfolioInfo(student, program),
       this.buildPortfolioGeneralAssessment(evaluations, student),
-      this.buildPortfolioDetail(program)
+      this.buildPortfolioDetail(program, evaluations)
     ];
   };
 
@@ -598,9 +614,9 @@ export class StudentInfoComponent implements OnInit {
     ];
   };
 
-  buildPortfolioDetail = (program) => ([
+  buildPortfolioDetail = (program, evaluations) => ([
       this.buildPortfolioDetailedAssessment(),
-      this.buildPortfolioOutcome(program),
+      this.buildPortfolioOutcome(program, evaluations),
       this.buildPortfolioOnlineCourseText(),
       this.buildPortfolioOnlineCourse(),
       this.buildPortfolioAddendum(),
@@ -617,16 +633,17 @@ export class StudentInfoComponent implements OnInit {
     margin: [0, 0, 0, 20]
   });
 
-  buildPortfolioOutcome = (program) => (
+  buildPortfolioOutcome = (program, evaluations) => (
     {
       margin: [0, 0, 0, 20],
       table: {
-        widths: [40, '*', 80],
+        widths: program.toUpperCase().includes('JAVA') ? [35, 'auto', 45, 45, 45, 45, 45, 45]
+          : [40, 'auto', 40, 40, 40, 40, 40],
         heights: [20],
         body: [
           [
             {
-              text: 'CHUẨN ĐẦU RA',
+              text: '\nCHUẨN ĐẦU RA\n ',
               style: 'tableHeader',
               colSpan: 2,
               alignment: 'center',
@@ -637,25 +654,74 @@ export class StudentInfoComponent implements OnInit {
             },
             {},
             {
-              text: 'ĐÁNH GIÁ',
+              text: '\nĐÁNH GIÁ\n ',
               style: 'tableHeader',
+              colSpan: program.toUpperCase().includes('JAVA') ? 6 : 5,
               alignment: 'center',
               fontSize: 11,
               bold: true,
               fillColor: '#2e6ad1',
               color: 'white'
-            }
+            },
+            {}, {}, {}, {}, program.toUpperCase().includes('JAVA') ? {} : ''
           ],
           ...this.array.map(array => {
             if (array.title != undefined) {
-              return [{
-                text: array.title,
-                style: 'tableHeader',
-                colSpan: 3,
-                alignment: 'left',
-                bold: true,
-                fontSize: 11,
-              }, {}, {}];
+              if (array.title.toUpperCase().includes('PHẦN 1')) {
+                return [{
+                  text: array.title,
+                  colSpan: 2,
+                  alignment: 'left',
+                  bold: true,
+                  fontSize: 11,
+                }, {},
+                  {
+                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
+                    alignment: 'left',
+                    bold: true,
+                    fontSize: 8,
+                  },
+                  {
+                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
+                    alignment: 'left',
+                    bold: true,
+                    fontSize: 8,
+                  },
+                  {
+                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
+                    alignment: 'left',
+                    bold: true,
+                    fontSize: 8,
+                  },
+                  {
+                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
+                    alignment: 'left',
+                    bold: true,
+                    fontSize: 8,
+                  },
+                  {
+                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
+                    alignment: 'left',
+                    bold: true,
+                    fontSize: 8,
+                  },
+                  program.toUpperCase().includes('JAVA') ? {
+                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
+                    alignment: 'left',
+                    bold: true,
+                    fontSize: 8,
+                  } : ''];
+              } else {
+                return [{
+                  text: array.title,
+                  style: 'tableHeader',
+                  colSpan: program.toUpperCase().includes('JAVA') ? 8 : 7,
+                  alignment: 'left',
+                  bold: true,
+                  fontSize: 11,
+                }, {},
+                  {}, {}, {}, {}, {}, program.toUpperCase().includes('JAVA') ? {} : ''];
+              }
             } else if (array.categoryId != undefined) {
               return [{
                 text: array.categoryId,
@@ -668,86 +734,113 @@ export class StudentInfoComponent implements OnInit {
                   text: array.name,
                   style: 'tableHeader',
                   alignment: 'left',
-                  colSpan: 2,
+                  colSpan: program.toUpperCase().includes('JAVA') ? 7 : 6,
                   bold: true,
                   fontSize: 11,
-                }, {}];
+                }, {}, {}, {}, {}, {}, program.toUpperCase().includes('JAVA') ? {} : ''];
             }
-            return [{
-              text: array.skillId,
-              alignment: 'right',
-              fontSize: 10,
-            },
+            return [
+              {
+                text: array.skillId,
+                alignment: 'right',
+                fontSize: 10,
+              },
               {
                 text: array.name,
                 alignment: 'left',
                 fontSize: 10,
               },
               {
-                text: array.evaluations != null ? array.evaluations.evaluation : '',
+                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
                 alignment: 'left',
                 fontSize: 10,
-              }];
+              },
+              {
+                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
+                alignment: 'left',
+                fontSize: 10,
+              },
+              {
+                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
+                alignment: 'left',
+                fontSize: 10,
+              },
+              {
+                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
+                alignment: 'left',
+                fontSize: 10,
+              },
+              {
+                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
+                alignment: 'left',
+                fontSize: 10,
+              },
+              program.toUpperCase().includes('JAVA') ? {
+                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
+                alignment: 'left',
+                fontSize: 10,
+              } : ''
+            ];
           })
         ],
       }
     });
 
   buildPortfolioOnlineCourse = () => ({
-      table: {
-        widths: [40, '*', 'auto'],
-        body: [
-          [
-            {
-              text: '\nSTT',
-              style: 'tableHeader',
-              alignment: 'center',
-              fontSize: 12,
-              bold: true
-            },
-            {
-              text: '\nKhóa học',
-              style: 'tableHeader',
-              alignment: 'center',
-              fontSize: 12,
-              bold: true
-            },
-            {
-              text: 'Đánh giá\n' +
-                '(Đã có chứng chỉ hoàn thành, Chưa có chứng\n chỉ hoàn thành)\n',
-              style: 'tableHeader',
-              alignment: 'center',
-              fontSize: 12,
-              bold: true
-            }
-          ],
-          ...this.listOnlineCourses.map(onlineCourse => {
-            {
-              return [
-                {
-                  text: onlineCourse.id,
-                  alignment: 'center',
-                  fontSize: 12,
-                  bold: true
-                },
-                {
-                  text: onlineCourse.name,
-                  alignment: 'left',
-                  fontSize: 12,
-                  bold: true
-                },
-                {
-                  text: onlineCourse.complete ? 'Đã có chứng chỉ' : 'Chưa có chứng chỉ',
-                  alignment: 'left',
-                  fontSize: 12,
-                  bold: true
-                }
-              ];
-            }
-          })
-        ]
-      }
-    });
+    table: {
+      widths: [40, '*', 'auto'],
+      body: [
+        [
+          {
+            text: '\nSTT',
+            style: 'tableHeader',
+            alignment: 'center',
+            fontSize: 12,
+            bold: true
+          },
+          {
+            text: '\nKhóa học',
+            style: 'tableHeader',
+            alignment: 'center',
+            fontSize: 12,
+            bold: true
+          },
+          {
+            text: 'Đánh giá\n' +
+              '(Đã có chứng chỉ hoàn thành, Chưa có chứng\n chỉ hoàn thành)\n',
+            style: 'tableHeader',
+            alignment: 'center',
+            fontSize: 12,
+            bold: true
+          }
+        ],
+        ...this.listOnlineCourses.map(onlineCourse => {
+          {
+            return [
+              {
+                text: onlineCourse.id,
+                alignment: 'center',
+                fontSize: 12,
+                bold: true
+              },
+              {
+                text: onlineCourse.name,
+                alignment: 'left',
+                fontSize: 12,
+                bold: true
+              },
+              {
+                text: onlineCourse.complete ? 'Đã có chứng chỉ' : 'Chưa có chứng chỉ',
+                alignment: 'left',
+                fontSize: 12,
+                bold: true
+              }
+            ];
+          }
+        })
+      ]
+    }
+  });
 
   buildPortfolioAddendum = () => ({
     text: 'III. PHỤ LỤC\n' +
