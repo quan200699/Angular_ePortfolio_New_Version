@@ -292,8 +292,8 @@ export class StudentInfoComponent implements OnInit {
     });
   }
 
-  generatePdf(action, student) {
-    const documentDefinition = this.getDocumentDefinition(student);
+  generatePdf(action, student, evaluations) {
+    const documentDefinition = this.getDocumentDefinition(student, evaluations);
     switch (action) {
       case 'open':
         pdfMake.createPdf(documentDefinition).open();
@@ -310,11 +310,11 @@ export class StudentInfoComponent implements OnInit {
     }
   }
 
-  getDocumentDefinition(student) {
+  getDocumentDefinition(student, evaluations) {
     return {
       pageMargins: [70, 120, 65, 60],
       header: this.buildPortfolioHeader(),
-      content: this.buildPortfolioContent(student),
+      content: this.buildPortfolioContent(student, evaluations),
       footer: this.buildPortfolioFooter()
     };
   }
@@ -332,7 +332,7 @@ export class StudentInfoComponent implements OnInit {
     }
   ];
 
-  buildPortfolioContent = (student) => {
+  buildPortfolioContent = (student, evaluations) => {
     let title = '';
     let program = '';
     if (student.classes != null) {
@@ -351,7 +351,7 @@ export class StudentInfoComponent implements OnInit {
       this.buildPortfolioTitle(title),
       this.buildPortfolioDescription(),
       this.buildPortfolioInfo(student, program),
-      this.buildPortfolioGeneralAssessment(),
+      this.buildPortfolioGeneralAssessment(evaluations, student),
       this.buildPortfolioDetail()
     ];
   };
@@ -444,15 +444,15 @@ export class StudentInfoComponent implements OnInit {
     }
   ];
 
-  buildPortfolioGeneralAssessment = () => {
+  buildPortfolioGeneralAssessment = (evaluations, student) => {
     const date = new Date();
     return [
       {
         text: '\nI. ĐÁNH GIÁ CHUNG\n' +
-          '1. Mức độ đánh giá (3)\n',
+          '1. Mức độ đánh giá (3) ' + evaluations.evaluation,
         fontSize: 12,
         bold: true,
-        margin: [0, 0, 0, 30]
+        margin: [0, 0, 0, 20]
       },
       {
         text: '\n2. Nhận xét chung\n',
@@ -460,18 +460,18 @@ export class StudentInfoComponent implements OnInit {
         bold: true
       },
       {
-        text: 'Điểm mạnh:\n',
+        text: 'Điểm mạnh:\n' + evaluations.advantages != null ? evaluations.advantages : '',
         fontSize: 12,
         italic: true,
       },
       {
-        text: 'Điểm yếu:\n',
+        text: 'Điểm yếu:\n' + evaluations.achiles != null ? evaluations.achiles : '',
         fontSize: 12,
         italic: true,
         margin: [0, 0, 0, 10]
       },
       {
-        text: 'Gợi ý cho doanh nghiệp:\n',
+        text: 'Gợi ý cho doanh nghiệp:\n' + evaluations.suggestion != null ? evaluations.suggestion : '',
         fontSize: 12,
         margin: [0, 0, 0, 70]
       },
@@ -487,11 +487,11 @@ export class StudentInfoComponent implements OnInit {
         margin: [0, 0, 40, 20],
       },
       {
-        text: 'NGUYỄN MINH QUÂN',
+        text: (student.classes != null ? (student.classes.lecture != null ? (student.classes.lecture.name) : '') : '').toUpperCase(),
         alignment: 'right',
         bold: true,
         fontSize: 12,
-        margin: [0, 50, 30, 20],
+        margin: [0, 60, 40, 10],
         pageBreak: 'after'
       }
     ];
