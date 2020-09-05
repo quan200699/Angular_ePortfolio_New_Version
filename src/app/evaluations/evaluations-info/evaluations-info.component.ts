@@ -5,7 +5,6 @@ import {SkillService} from '../../service/skill/skill.service';
 import {CategoryService} from '../../service/category/category.service';
 import {EvaluationsDetail} from '../../interface/evaluations-detail';
 import {Skill} from '../../interface/skill';
-import {Category} from '../../interface/category';
 import {Outcome} from '../../interface/outcome';
 import {OutcomeService} from '../../service/outcome/outcome.service';
 import {EvaluationsService} from '../../service/evaluations/evaluations.service';
@@ -20,8 +19,6 @@ export class EvaluationsInfoComponent implements OnInit {
     evaluation: ''
   };
   id: number;
-  listSkill: Skill[];
-  listCategory: Category[];
   listOutcome: Outcome[];
   evaluation: Skill;
   listEvaluation: string[] = ['Xuất sắc', 'Tốt', 'Đạt', 'Chưa đạt', 'N/A'];
@@ -49,7 +46,21 @@ export class EvaluationsInfoComponent implements OnInit {
 
   getAllOutcome() {
     this.outcomeService.getAllOutcome().subscribe(listOutcome => {
-      this.listOutcome = listOutcome
+      this.listOutcome = listOutcome;
+      this.listOutcome.map(async outcome => {
+        outcome.categories = await this.getAllCategoryByOutcome(outcome.id);
+        outcome.categories.map(async category => {
+          category.skills = await this.getAllSkillByCategory(category.id);
+        });
+      });
     });
+  }
+
+  getAllCategoryByOutcome(id: number) {
+    return this.outcomeService.getAllCategoryByOutcome(id).toPromise();
+  }
+
+  getAllSkillByCategory(id: number) {
+    return this.categoryService.getAllSkillByCategory(id).toPromise();
   }
 }
