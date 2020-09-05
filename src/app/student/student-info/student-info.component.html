@@ -41,7 +41,7 @@
                 <b>Các khóa học đã hoàn thành</b> <a class="float-right">{{numberOfCertificateIsCompleted}}/3</a>
               </li>
               <li class="list-group-item">
-                <b>Số lượng bản đánh giá</b> <a class="float-right">0/6</a>
+                <b>Số lượng bản đánh giá</b> <a class="float-right">{{listEvaluations.length}}/6</a>
               </li>
             </ul>
           </div>
@@ -87,6 +87,7 @@
               <li class="nav-item"><a class="nav-link active" href="#product" data-toggle="tab">Sản phẩm</a></li>
               <li class="nav-item"><a class="nav-link" href="#online-course" data-toggle="tab">Khóa học</a></li>
               <li class="nav-item"><a class="nav-link" href="#evaluation" data-toggle="tab">Đánh giá</a></li>
+              <li class="nav-item"><a class="nav-link" href="#evaluation-list" data-toggle="tab">Bản đánh giá</a></li>
             </ul>
           </div><!-- /.card-header -->
           <div class="card-body">
@@ -122,7 +123,7 @@
                         <div class="col-6">
                           <button type="button" class="btn btn-block btn-danger" style="color: white"
                                   data-toggle="modal"
-                                  data-target="#modal-delete" (click)="getProductId(product.id)">
+                                  data-target="#modal-delete1" (click)="getProductId(product.id)">
                             <i class="fas fa-trash"></i>
                           </button>
                         </div>
@@ -209,52 +210,96 @@
               <!-- /.tab-pane -->
 
               <div class="tab-pane" id="evaluation">
-                <form class="form-horizontal">
+                <form class="form-horizontal" (ngSubmit)="createEvaluation()">
                   <div class="form-group row">
-                    <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                    <label for="inputName" class="col-sm-2 col-form-label">Tên bản đánh giá</label>
                     <div class="col-sm-10">
-                      <input type="email" class="form-control" id="inputName" placeholder="Name">
+                      <input type="text" class="form-control" id="inputName" name="name" [(ngModel)]="evaluations.name"
+                             placeholder="Tên bản đánh giá">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                    <label for="date" class="col-sm-2 col-form-label">Ngày tạo</label>
                     <div class="col-sm-10">
-                      <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                      <input id="date" type="date" class="form-control" name="createDate"
+                             data-inputmask-inputformat="dd/mm/yyyy" [(ngModel)]="evaluations.createDate">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputName2" class="col-sm-2 col-form-label">Name</label>
+                    <label for="evaluation1" class="col-sm-2 col-form-label">Đánh giá</label>
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputName2" placeholder="Name">
+                      <input type="text" class="form-control" id="evaluation1" placeholder="Đánh giá"
+                             [(ngModel)]="evaluations.evaluation" name="evaluation">
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputExperience" class="col-sm-2 col-form-label">Experience</label>
+                    <label for="advantage" class="col-sm-2 col-form-label">Ưu điểm</label>
                     <div class="col-sm-10">
-                      <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
+                      <input type="text" class="form-control" id="advantage" [(ngModel)]="description.advantages"
+                             placeholder="Ưu điểm" name="advantages"/>
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>
+                    <label for="achiles" class="col-sm-2 col-form-label">Nhược điểm</label>
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
+                      <input type="text" class="form-control" name="achiles" [(ngModel)]="description.achiles"
+                             id="achiles" placeholder="Nhược điểm">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="suggestion" class="col-sm-2 col-form-label">Gợi ý cho doanh nghiệp</label>
+                    <div class="col-sm-10">
+                      <textarea class="form-control" id="suggestion" placeholder="Gợi ý cho doanh nghiệp"
+                                name="suggestion" [(ngModel)]="description.suggestion"></textarea>
                     </div>
                   </div>
                   <div class="form-group row">
                     <div class="offset-sm-2 col-sm-10">
-                      <div class="checkbox">
-                        <label>
-                          <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <div class="offset-sm-2 col-sm-10">
-                      <button type="submit" class="btn btn-danger">Submit</button>
+                      <button type="submit" class="btn btn-primary">Tạo</button>
                     </div>
                   </div>
                 </form>
+              </div>
+
+              <div class="tab-pane" id="evaluation-list">
+                <!-- The timeline -->
+                <table class="table table-bordered" id="table-evaluations">
+                  <thead>
+                  <tr>
+                    <th style="width: 10px">#</th>
+                    <th>Tên bản đánh giá</th>
+                    <th>Ngày tạo</th>
+                    <th style="width: 160px" *ngIf="hasRoleAdmin"></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let evaluations of listEvaluations; index as i">
+                    <td>{{i + 1}}</td>
+                    <td>
+                      {{evaluations.name}}
+                    </td>
+                    <td>
+                      {{evaluations.createDate.getUTCDate()}} - {{evaluations.createDate.getUTCMonth() + 1}}
+                      - {{evaluations.createDate.getUTCFullYear()}}
+                    </td>
+                    <td *ngIf="hasRoleAdmin">
+                      <div class="row">
+                        <div class="col-6">
+                          <a [routerLink]="['edit',evaluations.id]" class="btn btn-block btn-primary" style="color: white">
+                            <i class="fas fa-edit"></i>
+                          </a>
+                        </div>
+                        <div class="col-6">
+                          <button type="button" class="btn btn-block btn-danger" style="color: white" data-toggle="modal"
+                                  data-target="#modal-delete2" (click)="getEvaluationId(evaluations.id)">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
               </div>
               <!-- /.tab-pane -->
             </div>
@@ -267,7 +312,7 @@
     </div>
     <!-- /.row -->
   </div><!-- /.container-fluid -->
-  <div class="modal fade" id="modal-delete">
+  <div class="modal fade" id="modal-delete1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -282,6 +327,27 @@
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
           <button type="button" class="btn btn-danger" (click)="deleteProduct()">Xóa</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <div class="modal fade" id="modal-delete2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Xóa bản đánh giá</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Bạn có chắc muốn bản đánh giá này</p>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-danger" (click)="deleteEvaluations()">Xóa</button>
         </div>
       </div>
       <!-- /.modal-content -->

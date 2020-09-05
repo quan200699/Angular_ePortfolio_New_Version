@@ -11,6 +11,10 @@ import {OnlineCourse} from '../../interface/online-course';
 import {OnlineCourseService} from '../../service/online-course/online-course.service';
 import {CertificateService} from '../../service/certificate/certificate.service';
 import {Certificate} from '../../interface/certificate';
+import {Evaluations} from '../../interface/evaluations';
+import {Description} from '../../interface/description';
+import {DescriptionService} from '../../service/description/description.service';
+import {EvaluationsService} from '../../service/evaluations/evaluations.service';
 
 declare var $: any;
 
@@ -39,6 +43,17 @@ export class StudentInfoComponent implements OnInit {
   isEditOnlineCourse: boolean = false;
   index: number = -1;
   numberOfCertificateIsCompleted: number = 0;
+  evaluations: Evaluations = {
+    name: '',
+    evaluation: ''
+  };
+  description: Description = {
+    achiles: '',
+    advantages: '',
+    suggestion: ''
+  };
+  listEvaluations: Evaluations[] = [];
+  evaluationId: number;
 
   constructor(private activatedRoute: ActivatedRoute,
               private studentService: StudentService,
@@ -46,12 +61,15 @@ export class StudentInfoComponent implements OnInit {
               private notificationService: NotificationService,
               private authenticationService: AuthenticationService,
               private onlineCourseService: OnlineCourseService,
-              private certificateService: CertificateService) {
+              private certificateService: CertificateService,
+              private descriptionService: DescriptionService,
+              private evaluationService: EvaluationsService) {
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
       this.id = +paramMap.get('id');
       this.getStudent(this.id);
       this.getAllProductByStudent(this.id);
       this.countNumberOfCertificate(this.id);
+      this.getAllEvaluationsByStudent(this.id);
     });
     this.authenticationService.currentUser.subscribe(value => this.currentUser = value);
     if (this.currentUser) {
@@ -100,7 +118,7 @@ export class StudentInfoComponent implements OnInit {
         this.listProducts = listProduct;
       });
       $(function() {
-        $('#modal-delete').modal('hide');
+        $('#modal-delete1').modal('hide');
       });
       this.notificationService.showSuccessMessage('Xóa thành công!');
     }, () => {
@@ -202,6 +220,70 @@ export class StudentInfoComponent implements OnInit {
   countNumberOfCertificate(id) {
     return this.certificateService.countNumberOfCertificateComplete(id).subscribe(numbers => {
       this.numberOfCertificateIsCompleted = numbers;
+    });
+  }
+
+  getStudentToPromise(id: number) {
+    return this.studentService.getStudent(id).toPromise();
+  }
+
+  async createEvaluation() {
+    let description = await this.createDescription(this.description);
+    if (description != null) {
+      this.evaluations.description = {
+        id: description.id
+      };
+      this.evaluations.student = {
+        id: this.id
+      };
+      let student = await this.getStudentToPromise(this.id);
+      if (student.classes.module.program.name.includes('Java')) {
+        this.evaluations.template = {
+          id: 1
+        };
+      } else {
+        this.evaluations.template = {
+          id: 2
+        };
+      }
+      this.evaluationService.createDescription(this.evaluations).subscribe(() => {
+        this.notificationService.showSuccessMessage('Đánh giá thành công!');
+        this.evaluations = {};
+        this.description = {};
+      }, () => {
+        this.notificationService.showErrorMessage('Đánh giá thất bại!');
+      });
+    }
+  }
+
+  createDescription(description) {
+    return this.descriptionService.createDescription(description).toPromise();
+  }
+
+  getAllEvaluationsByStudent(id: number) {
+    this.evaluationService.getAllEvaluationsByStudent(id).subscribe(listEvaluation => {
+      this.listEvaluations = listEvaluation;
+      this.listEvaluations.map(evaluations => {
+        evaluations.createDate = new Date(evaluations.createDate);
+      });
+    });
+  }
+
+  getEvaluationId(id: any) {
+    this.evaluationId = id;
+  }
+
+  deleteEvaluations() {
+    this.evaluationService.deleteEvaluations(this.evaluationId).subscribe(() => {
+      this.evaluationService.getAllEvaluationsByStudent(this.id).subscribe(listEvaluations => {
+        this.listEvaluations = listEvaluations;
+      });
+      $(function() {
+        $('#modal-delete2').modal('hide');
+      });
+      this.notificationService.showSuccessMessage('Xóa thành công!');
+    }, () => {
+      this.notificationService.showErrorMessage('Xóa thất bại!');
     });
   }
 }
