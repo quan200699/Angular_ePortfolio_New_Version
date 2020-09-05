@@ -4,10 +4,10 @@ import {EvaluationsDetailService} from '../../service/evaluations-detail/evaluat
 import {SkillService} from '../../service/skill/skill.service';
 import {CategoryService} from '../../service/category/category.service';
 import {EvaluationsDetail} from '../../interface/evaluations-detail';
-import {Skill} from '../../interface/skill';
 import {Outcome} from '../../interface/outcome';
 import {OutcomeService} from '../../service/outcome/outcome.service';
 import {EvaluationsService} from '../../service/evaluations/evaluations.service';
+import {Evaluations} from '../../interface/evaluations';
 
 @Component({
   selector: 'app-evaluations-info',
@@ -20,8 +20,11 @@ export class EvaluationsInfoComponent implements OnInit {
   };
   id: number;
   listOutcome: Outcome[];
-  evaluation: Skill;
+  evaluation: Evaluations;
   listEvaluation: string[] = ['Xuất sắc', 'Tốt', 'Đạt', 'Chưa đạt', 'N/A'];
+  evaluationChoice = null;
+  evaluationCategoryChoice: string[] = [''];
+  evaluationOutcomeChoice: string[] = [''];
 
   constructor(private activatedRoute: ActivatedRoute,
               private evaluationDetailService: EvaluationsDetailService,
@@ -36,6 +39,7 @@ export class EvaluationsInfoComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getAllOutcome();
   }
 
   getEvaluation(id) {
@@ -62,5 +66,25 @@ export class EvaluationsInfoComponent implements OnInit {
 
   getAllSkillByCategory(id: number) {
     return this.categoryService.getAllSkillByCategory(id).toPromise();
+  }
+
+  createMultiEvaluationDetail() {
+
+  }
+
+  setAllEvaluation() {
+
+  }
+
+  setAllEvaluationByOutcome(id: any, index: number) {
+
+  }
+
+  setAllEvaluationByCategory(id: number, index: number) {
+
+  }
+
+  addEvaluationDetailToList(index: number) {
+
   }
 }
