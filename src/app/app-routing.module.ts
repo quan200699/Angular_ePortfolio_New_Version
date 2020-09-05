@@ -41,6 +41,10 @@ const routes: Routes = [
         path: 'skills',
         loadChildren: () => import('./skill/skill.module').then(module => module.SkillModule)
       },
+      {
+        path: 'evaluations',
+        loadChildren: () => import('./evaluations/evaluations.module').then(module => module.EvaluationsModule)
+      },
     ]
   },
   {
