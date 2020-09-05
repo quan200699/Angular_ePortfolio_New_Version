@@ -409,6 +409,9 @@ export class StudentInfoComponent implements OnInit {
   }
 
   generatePdf(action, student, evaluations) {
+    let studentName = student.name;
+    let className = student.classes != null ? student.classes.name : '';
+    let fileName = studentName + '-' + className + '.pdf';
     const documentDefinition = this.getDocumentDefinition(student, evaluations);
     switch (action) {
       case 'open':
@@ -418,7 +421,7 @@ export class StudentInfoComponent implements OnInit {
         pdfMake.createPdf(documentDefinition).print();
         break;
       case 'download':
-        pdfMake.createPdf(documentDefinition).download();
+        pdfMake.createPdf(documentDefinition).download(fileName);
         break;
       default:
         pdfMake.createPdf(documentDefinition).open();
