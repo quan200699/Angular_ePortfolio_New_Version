@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {Category} from '../../interface/category';
+import {Skill} from '../../interface/skill';
 
 const API_URL = `${environment.apiUrl}`;
 
@@ -36,5 +37,9 @@ export class CategoryService {
 
   findByCategoryName(name: string): Observable<Category> {
     return this.http.get<Category>(API_URL + '/categories/name?name=' + name);
+  }
+
+  getAllSkillByCategory(id: number): Observable<Skill[]> {
+    return this.http.get<Skill[]>(API_URL + `/categories/${id}/skills`);
   }
 }

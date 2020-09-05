@@ -3,6 +3,7 @@ import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Outcome} from '../../interface/outcome';
+import {Category} from '../../interface/category';
 
 const API_URL = `${environment.apiUrl}`;
 
@@ -36,5 +37,9 @@ export class OutcomeService {
 
   findByTitle(title: string): Observable<Outcome> {
     return this.http.get<Outcome>(API_URL + '/outcomes/name?title=' + title);
+  }
+
+  getAllCategoryByOutcome(id: number): Observable<Category[]> {
+    return this.http.get<Category[]>(API_URL + `/outcomes/${id}/categories`);
   }
 }
