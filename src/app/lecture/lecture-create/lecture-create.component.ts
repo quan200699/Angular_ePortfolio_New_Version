@@ -35,6 +35,7 @@ export class LectureCreateComponent implements OnInit {
         if (user != null) {
           this.lecture.user = user;
           this.lectureService.createLecture(this.lecture).subscribe(() => {
+            this.lecture = {};
             this.notificationService.showSuccessMessage('Tạo thành công!');
           }, () => {
             this.notificationService.showErrorMessage('Xảy ra lỗi!');

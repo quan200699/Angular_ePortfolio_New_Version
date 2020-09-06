@@ -253,16 +253,6 @@ export class StudentInfoComponent implements OnInit {
       this.evaluations.student = {
         id: this.id
       };
-      let student = await this.getStudentToPromise(this.id);
-      if (student.classes.module.program.name.includes('Java')) {
-        this.evaluations.template = {
-          id: 1
-        };
-      } else {
-        this.evaluations.template = {
-          id: 2
-        };
-      }
       this.evaluationService.createDescription(this.evaluations).subscribe(() => {
         this.notificationService.showSuccessMessage('Đánh giá thành công!');
         this.evaluations = {};
