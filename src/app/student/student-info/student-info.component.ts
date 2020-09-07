@@ -80,12 +80,27 @@ export class StudentInfoComponent implements OnInit {
               private outcomeService: OutcomeService,
               private categoryService: CategoryService,
               private skillService: SkillService) {
-    this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
+    this.activatedRoute.paramMap.subscribe(async (paramMap: ParamMap) => {
       this.id = +paramMap.get('id');
       this.getStudent(this.id);
       this.getAllProductByStudent(this.id);
       this.countNumberOfCertificate(this.id);
       this.getAllEvaluationsByStudent(this.id);
+      let student = await this.getStudentToPromise(this.id);
+      if (student.classes != null) {
+        if (student.classes.module != null) {
+          if (student.classes.module.program != null) {
+            let programName = student.classes.module.program.name;
+            let templateId;
+            if (programName.toUpperCase().includes('JAVA')) {
+              templateId = 1;
+            } else {
+              templateId = 2;
+            }
+            this.getAllOutcomeByTemplate(templateId);
+          }
+        }
+      }
     });
     this.authenticationService.currentUser.subscribe(value => this.currentUser = value);
     if (this.currentUser) {
@@ -97,7 +112,6 @@ export class StudentInfoComponent implements OnInit {
       }
     }
     this.getAllOnlineCourse();
-    this.getAllOutcome();
   }
 
   ngOnInit() {
@@ -339,8 +353,8 @@ export class StudentInfoComponent implements OnInit {
     return this.evaluationService.getAllEvaluationsDetailByEvaluationAndSkill(id, skillId).toPromise();
   }
 
-  async getAllOutcome() {
-    let listOutcome = await this.outcomeService.getAllOutcome().toPromise();
+  async getAllOutcomeByTemplate(templateId) {
+    let listOutcome = await this.outcomeService.getAllOutcomeByTemplate(templateId).toPromise();
     this.sortOutcome(listOutcome);
     for (let i = 0; i < listOutcome.length; i++) {
       this.array.push(listOutcome[i]);
