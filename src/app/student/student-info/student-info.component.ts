@@ -286,9 +286,9 @@ export class StudentInfoComponent implements OnInit {
         }, () => {
           this.notificationService.showErrorMessage('Đánh giá thất bại!');
         });
+      } else {
+        this.notificationService.showErrorMessage('Đánh giá thất bại!');
       }
-    } else {
-      this.notificationService.showErrorMessage('Đánh giá thất bại!');
     }
   }
 
