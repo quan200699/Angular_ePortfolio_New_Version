@@ -6,6 +6,7 @@ import {TemplateCreateComponent} from './template-create/template-create.compone
 import {FormsModule} from '@angular/forms';
 import {TemplateEditComponent} from './template-edit/template-edit.component';
 import {TemplateInfoComponent} from './template-info/template-info.component';
+import {TemplateCreateDataComponent} from './template-create-data/template-create-data.component';
 
 
 
@@ -15,6 +16,7 @@ import {TemplateInfoComponent} from './template-info/template-info.component';
     TemplateCreateComponent,
     TemplateEditComponent,
     TemplateInfoComponent,
+    TemplateCreateDataComponent,
   ],
   imports: [
     CommonModule,

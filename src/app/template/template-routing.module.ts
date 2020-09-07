@@ -3,6 +3,8 @@ import {RouterModule, Routes} from '@angular/router';
 import {TemplateListComponent} from './template-list/template-list.component';
 import {TemplateCreateComponent} from './template-create/template-create.component';
 import {TemplateEditComponent} from './template-edit/template-edit.component';
+import {TemplateCreateDataComponent} from './template-create-data/template-create-data.component';
+import {TemplateInfoComponent} from './template-info/template-info.component';
 
 
 const routes: Routes = [
@@ -20,7 +22,11 @@ const routes: Routes = [
   },
   {
     path: 'info/:id',
-    component: TemplateEditComponent
+    component: TemplateInfoComponent
+  },
+  {
+    path: 'info/:id/create-data',
+    component: TemplateCreateDataComponent
   },
 ];
 

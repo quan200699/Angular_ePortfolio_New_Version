@@ -34,19 +34,23 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let student of listTemplate; index as i">
+        <tr *ngFor="let template of listTemplate; index as i">
           <td>{{i + 1}}</td>
-          <td>{{student.name}}</td>
+          <td>
+            <a [routerLink]="['info',template.id]">
+              {{template.name}}
+            </a>
+          </td>
           <td *ngIf="hasRoleAdmin">
             <div class="row">
               <div class="col-6">
-                <a [routerLink]="['edit',student.id]" class="btn btn-block btn-primary" style="color: white">
+                <a [routerLink]="['edit',template.id]" class="btn btn-block btn-primary" style="color: white">
                   <i class="fas fa-edit"></i>
                 </a>
               </div>
               <div class="col-6">
                 <button type="button" class="btn btn-block btn-danger" style="color: white" data-toggle="modal"
-                        data-target="#modal-delete" (click)="getTemplateId(student.id)">
+                        data-target="#modal-delete" (click)="getTemplateId(template.id)">
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
