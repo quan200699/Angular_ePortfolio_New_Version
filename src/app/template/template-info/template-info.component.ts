@@ -1,27 +1,37 @@
 import {Component, OnInit} from '@angular/core';
-import {UserToken} from '../../interface/user-token';
+import {ActivatedRoute, ParamMap} from '@angular/router';
 import {NotificationService} from '../../service/notification/notification.service';
-import {AuthenticationService} from '../../service/authentication/authentication.service';
-import {Outcome} from '../../interface/outcome';
 import {OutcomeService} from '../../service/outcome/outcome.service';
+import {CategoryService} from '../../service/category/category.service';
+import {SkillService} from '../../service/skill/skill.service';
+import {Outcome} from '../../interface/outcome';
+import {UserToken} from '../../interface/user-token';
+import {AuthenticationService} from '../../service/authentication/authentication.service';
 
 declare var $: any;
 
 @Component({
-  selector: 'app-outcome-list',
-  templateUrl: './outcome-list.component.html',
-  styleUrls: ['./outcome-list.component.css']
+  selector: 'app-template-info',
+  templateUrl: './template-info.component.html',
+  styleUrls: ['./template-info.component.css']
 })
-export class OutcomeListComponent implements OnInit {
-
+export class TemplateInfoComponent implements OnInit {
   listOutcome: Outcome[];
   currentUser: UserToken;
   hasRoleAdmin = false;
   id: number;
+  templateId: number;
 
-  constructor(private outcomeService: OutcomeService,
+  constructor(private activatedRoute: ActivatedRoute,
               private notificationService: NotificationService,
+              private outcomeService: OutcomeService,
+              private categoryService: CategoryService,
+              private skillService: SkillService,
               private authenticationService: AuthenticationService) {
+    this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
+      this.templateId = +paramMap.get('id');
+      this.getAllOutcomeByTemplate(this.templateId);
+    });
     this.authenticationService.currentUser.subscribe(value => this.currentUser = value);
     if (this.currentUser) {
       const roleList = this.currentUser.roles;
@@ -34,16 +44,15 @@ export class OutcomeListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getAllOutcome();
   }
 
   getOutcomeId(id: number) {
     this.id = id;
   }
 
-  deleteOutcome() {
+  deleteOutcome(templateId) {
     this.outcomeService.deleteOutcome(this.id).subscribe(() => {
-      this.outcomeService.getAllOutcome().subscribe(listLecture => {
+      this.outcomeService.getAllOutcomeByTemplate(templateId).subscribe(listLecture => {
         this.listOutcome = listLecture;
       });
       $(function() {
@@ -55,8 +64,8 @@ export class OutcomeListComponent implements OnInit {
     });
   }
 
-  getAllOutcome() {
-    this.outcomeService.getAllOutcome().subscribe(listOutcome => {
+  getAllOutcomeByTemplate(id) {
+    this.outcomeService.getAllOutcomeByTemplate(id).subscribe(listOutcome => {
       this.listOutcome = listOutcome;
       $(function() {
         $('#table-outcome').DataTable({

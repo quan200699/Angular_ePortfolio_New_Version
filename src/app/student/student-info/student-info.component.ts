@@ -80,12 +80,27 @@ export class StudentInfoComponent implements OnInit {
               private outcomeService: OutcomeService,
               private categoryService: CategoryService,
               private skillService: SkillService) {
-    this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
+    this.activatedRoute.paramMap.subscribe(async (paramMap: ParamMap) => {
       this.id = +paramMap.get('id');
       this.getStudent(this.id);
       this.getAllProductByStudent(this.id);
       this.countNumberOfCertificate(this.id);
       this.getAllEvaluationsByStudent(this.id);
+      let student = await this.getStudentToPromise(this.id);
+      if (student.classes != null) {
+        if (student.classes.module != null) {
+          if (student.classes.module.program != null) {
+            let programName = student.classes.module.program.name;
+            let templateId;
+            if (programName.toUpperCase().includes('JAVA')) {
+              templateId = 1;
+            } else {
+              templateId = 2;
+            }
+            this.getAllOutcomeByTemplate(templateId);
+          }
+        }
+      }
     });
     this.authenticationService.currentUser.subscribe(value => this.currentUser = value);
     if (this.currentUser) {
@@ -97,7 +112,6 @@ export class StudentInfoComponent implements OnInit {
       }
     }
     this.getAllOnlineCourse();
-    this.getAllOutcome();
   }
 
   ngOnInit() {
@@ -244,7 +258,8 @@ export class StudentInfoComponent implements OnInit {
     return this.studentService.getStudent(id).toPromise();
   }
 
-  async createEvaluation() {
+  async createEvaluation(size) {
+    let isValid = true;
     let description = await this.createDescription(this.description);
     if (description != null) {
       this.evaluations.description = {
@@ -254,22 +269,40 @@ export class StudentInfoComponent implements OnInit {
         id: this.id
       };
       let student = await this.getStudentToPromise(this.id);
-      if (student.classes.module.program.name.includes('Java')) {
-        this.evaluations.template = {
-          id: 1
-        };
+      if (student.classes != null) {
+        if (student.classes.module != null) {
+          if (student.classes.module.program != null) {
+            let programName = student.classes.module.program.name;
+            if (programName.toUpperCase().includes('JAVA')) {
+              if (size == 6) {
+                isValid = false;
+              }
+            } else if (programName.toUpperCase().includes('PHP')) {
+              if (size == 5) {
+                isValid = false;
+              }
+            } else {
+              isValid = false;
+            }
+          }
+        }
       } else {
-        this.evaluations.template = {
-          id: 2
-        };
+        isValid = false;
       }
-      this.evaluationService.createDescription(this.evaluations).subscribe(() => {
-        this.notificationService.showSuccessMessage('Đánh giá thành công!');
-        this.evaluations = {};
-        this.description = {};
-      }, () => {
+      if (isValid) {
+        this.evaluationService.createDescription(this.evaluations).subscribe(() => {
+          this.notificationService.showSuccessMessage('Đánh giá thành công!');
+          this.evaluations = {};
+          this.description = {};
+          this.evaluationService.getAllEvaluationsByStudent(this.id).subscribe((listEvaluations) => {
+            this.listEvaluations = listEvaluations;
+          });
+        }, () => {
+          this.notificationService.showErrorMessage('Đánh giá thất bại!');
+        });
+      } else {
         this.notificationService.showErrorMessage('Đánh giá thất bại!');
-      });
+      }
     }
   }
 
@@ -284,6 +317,10 @@ export class StudentInfoComponent implements OnInit {
         evaluations.createDate = new Date(evaluations.createDate);
       });
     });
+  }
+
+  getAllEvaluationsByStudentToPromise(id: number) {
+    return this.evaluationService.getAllEvaluationsByStudent(id).toPromise();
   }
 
   getEvaluationId(id: any) {
@@ -316,8 +353,8 @@ export class StudentInfoComponent implements OnInit {
     return this.evaluationService.getAllEvaluationsDetailByEvaluationAndSkill(id, skillId).toPromise();
   }
 
-  async getAllOutcome() {
-    let listOutcome = await this.outcomeService.getAllOutcome().toPromise();
+  async getAllOutcomeByTemplate(templateId) {
+    let listOutcome = await this.outcomeService.getAllOutcomeByTemplate(templateId).toPromise();
     this.sortOutcome(listOutcome);
     for (let i = 0; i < listOutcome.length; i++) {
       this.array.push(listOutcome[i]);
@@ -328,7 +365,25 @@ export class StudentInfoComponent implements OnInit {
         let skillList = await this.categoryService.getAllSkillByCategory(categoryList[j].id).toPromise();
         this.sortSkill(skillList);
         for (let k = 0; k < skillList.length; k++) {
-          skillList[k].evaluations = await this.getEvaluationDetailByEvaluationAndSkill(this.id, skillList[k].id);
+          let evaluationList = await this.getAllEvaluationsByStudentToPromise(this.id);
+          if (evaluationList[0] != null) {
+            skillList[k].evaluations1 = await this.getEvaluationDetailByEvaluationAndSkill(evaluationList[0].id, skillList[k].id);
+          }
+          if (evaluationList[1] != null) {
+            skillList[k].evaluations2 = await this.getEvaluationDetailByEvaluationAndSkill(evaluationList[1].id, skillList[k].id);
+          }
+          if (evaluationList[2] != null) {
+            skillList[k].evaluations3 = await this.getEvaluationDetailByEvaluationAndSkill(evaluationList[2].id, skillList[k].id);
+          }
+          if (evaluationList[3] != null) {
+            skillList[k].evaluations4 = await this.getEvaluationDetailByEvaluationAndSkill(evaluationList[3].id, skillList[k].id);
+          }
+          if (evaluationList[4] != null) {
+            skillList[k].evaluations5 = await this.getEvaluationDetailByEvaluationAndSkill(evaluationList[4].id, skillList[k].id);
+          }
+          if (evaluationList[5] != null) {
+            skillList[k].evaluations6 = await this.getEvaluationDetailByEvaluationAndSkill(evaluationList[5].id, skillList[k].id);
+          }
           this.array.push(skillList[k]);
         }
       }
@@ -408,8 +463,11 @@ export class StudentInfoComponent implements OnInit {
     return term;
   }
 
-  generatePdf(action, student, evaluations) {
-    const documentDefinition = this.getDocumentDefinition(student, evaluations);
+  generatePdf(action, student, evaluations, listEvaluations) {
+    let studentName = student.name;
+    let className = student.classes != null ? student.classes.name : '';
+    let fileName = studentName + '-' + className + '.pdf';
+    const documentDefinition = this.getDocumentDefinition(student, evaluations, listEvaluations);
     switch (action) {
       case 'open':
         pdfMake.createPdf(documentDefinition).open();
@@ -418,7 +476,7 @@ export class StudentInfoComponent implements OnInit {
         pdfMake.createPdf(documentDefinition).print();
         break;
       case 'download':
-        pdfMake.createPdf(documentDefinition).download();
+        pdfMake.createPdf(documentDefinition).download(fileName);
         break;
       default:
         pdfMake.createPdf(documentDefinition).open();
@@ -426,11 +484,11 @@ export class StudentInfoComponent implements OnInit {
     }
   }
 
-  getDocumentDefinition(student, evaluations) {
+  getDocumentDefinition(student, evaluations, listEvaluations) {
     return {
       pageMargins: [70, 120, 65, 60],
       header: this.buildPortfolioHeader(),
-      content: this.buildPortfolioContent(student, evaluations),
+      content: this.buildPortfolioContent(student, evaluations, listEvaluations),
       footer: this.buildPortfolioFooter()
     };
   }
@@ -448,7 +506,7 @@ export class StudentInfoComponent implements OnInit {
     }
   ];
 
-  buildPortfolioContent = (student, evaluations) => {
+  buildPortfolioContent = (student, evaluations, listEvaluations) => {
     let title = '';
     let program = '';
     if (student.classes != null) {
@@ -468,7 +526,7 @@ export class StudentInfoComponent implements OnInit {
       this.buildPortfolioDescription(),
       this.buildPortfolioInfo(student, program),
       this.buildPortfolioGeneralAssessment(evaluations, student),
-      this.buildPortfolioDetail(program, evaluations)
+      this.buildPortfolioDetail(program, evaluations, listEvaluations)
     ];
   };
 
@@ -561,11 +619,10 @@ export class StudentInfoComponent implements OnInit {
   ];
 
   buildPortfolioGeneralAssessment = (evaluations, student) => {
-    const date = new Date();
     return [
       {
         text: '\nI. ĐÁNH GIÁ CHUNG\n' +
-          '1. Mức độ đánh giá (3) ' + evaluations.evaluation,
+          '1. Mức độ đánh giá (3) \n' + evaluations.evaluation,
         fontSize: 12,
         bold: true,
         margin: [0, 0, 0, 20]
@@ -576,20 +633,21 @@ export class StudentInfoComponent implements OnInit {
         bold: true
       },
       {
-        text: 'Điểm mạnh:\n' + evaluations.advantages != null ? evaluations.advantages : '',
+        text: 'Điểm mạnh:\n' + (evaluations.description != null ? evaluations.description.advantages : ''),
         fontSize: 12,
-        italic: true,
+        italics: true,
       },
       {
-        text: 'Điểm yếu:\n' + evaluations.achiles != null ? evaluations.achiles : '',
+        text: 'Điểm yếu:\n' + (evaluations.description != null ? evaluations.description.achiles : ''),
         fontSize: 12,
-        italic: true,
+        italics: true,
         margin: [0, 0, 0, 10]
       },
       {
-        text: 'Gợi ý cho doanh nghiệp:\n' + evaluations.suggestion != null ? evaluations.suggestion : '',
+        text: 'Gợi ý cho doanh nghiệp:' + (evaluations.description != null ? '\n' + evaluations.description.suggestion : '..........................'),
         fontSize: 12,
-        margin: [0, 0, 0, 70]
+        italics: true,
+        margin: [0, 0, 0, 45]
       },
       {
         text: '\nHà Nội, ngày ' + evaluations.createDate.getUTCDate() + ' tháng '
@@ -614,9 +672,9 @@ export class StudentInfoComponent implements OnInit {
     ];
   };
 
-  buildPortfolioDetail = (program, evaluations) => ([
+  buildPortfolioDetail = (program, evaluations, listEvaluations) => ([
       this.buildPortfolioDetailedAssessment(),
-      this.buildPortfolioOutcome(program, evaluations),
+      this.buildPortfolioOutcome(program, evaluations, listEvaluations),
       this.buildPortfolioOnlineCourseText(),
       this.buildPortfolioOnlineCourse(),
       this.buildPortfolioAddendum(),
@@ -633,158 +691,163 @@ export class StudentInfoComponent implements OnInit {
     margin: [0, 0, 0, 20]
   });
 
-  buildPortfolioOutcome = (program, evaluations) => (
-    {
-      margin: [0, 0, 0, 20],
-      table: {
-        widths: program.toUpperCase().includes('JAVA') ? [35, 'auto', 45, 45, 45, 45, 45, 45]
-          : [40, 'auto', 40, 40, 40, 40, 40],
-        heights: [20],
-        body: [
-          [
-            {
-              text: '\nCHUẨN ĐẦU RA\n ',
-              style: 'tableHeader',
-              colSpan: 2,
-              alignment: 'center',
-              fontSize: 11,
-              bold: true,
-              fillColor: '#2e6ad1',
-              color: 'white'
-            },
-            {},
-            {
-              text: '\nĐÁNH GIÁ\n ',
-              style: 'tableHeader',
-              colSpan: program.toUpperCase().includes('JAVA') ? 6 : 5,
-              alignment: 'center',
-              fontSize: 11,
-              bold: true,
-              fillColor: '#2e6ad1',
-              color: 'white'
-            },
-            {}, {}, {}, {}, program.toUpperCase().includes('JAVA') ? {} : ''
-          ],
-          ...this.array.map(array => {
-            if (array.title != undefined) {
-              if (array.title.toUpperCase().includes('PHẦN 1')) {
-                return [{
-                  text: array.title,
-                  colSpan: 2,
-                  alignment: 'left',
-                  bold: true,
-                  fontSize: 11,
-                }, {},
-                  {
-                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
-                    alignment: 'left',
-                    bold: true,
-                    fontSize: 8,
-                  },
-                  {
-                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
-                    alignment: 'left',
-                    bold: true,
-                    fontSize: 8,
-                  },
-                  {
-                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
-                    alignment: 'left',
-                    bold: true,
-                    fontSize: 8,
-                  },
-                  {
-                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
-                    alignment: 'left',
-                    bold: true,
-                    fontSize: 8,
-                  },
-                  {
-                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
-                    alignment: 'left',
-                    bold: true,
-                    fontSize: 8,
-                  },
-                  program.toUpperCase().includes('JAVA') ? {
-                    text: '\n' + this.convertDateToString(evaluations.createDate) + '\n ',
-                    alignment: 'left',
-                    bold: true,
-                    fontSize: 8,
-                  } : ''];
-              } else {
-                return [{
-                  text: array.title,
-                  style: 'tableHeader',
-                  colSpan: program.toUpperCase().includes('JAVA') ? 8 : 7,
-                  alignment: 'left',
-                  bold: true,
-                  fontSize: 11,
-                }, {},
-                  {}, {}, {}, {}, {}, program.toUpperCase().includes('JAVA') ? {} : ''];
-              }
-            } else if (array.categoryId != undefined) {
+  buildPortfolioOutcome = (program, evaluations, listEvaluations) => ({
+    margin: [0, 0, 0, 20],
+    table: {
+      widths: program.toUpperCase().includes('JAVA') ? ['auto', 120, 44, 44, 44, 44, 44, 44]
+        : ['auto', 120, 44, 44, 44, 44, 44],
+      heights: [20],
+      body: [
+        [
+          {
+            text: '\nCHUẨN ĐẦU RA\n ',
+            style: 'tableHeader',
+            colSpan: 2,
+            alignment: 'center',
+            fontSize: 11,
+            bold: true,
+            fillColor: '#2e6ad1',
+            color: 'white'
+          },
+          {},
+          {
+            text: '\nĐÁNH GIÁ\n ',
+            style: 'tableHeader',
+            colSpan: program.toUpperCase().includes('JAVA') ? 6 : 5,
+            alignment: 'center',
+            fontSize: 11,
+            bold: true,
+            fillColor: '#2e6ad1',
+            color: 'white'
+          },
+          {}, {}, {}, {}, program.toUpperCase().includes('JAVA') ? {} : ''
+        ],
+        ...this.array.map(array => {
+          if (array.title != undefined) {
+            if (array.title.toUpperCase().includes('PHẦN 1')) {
               return [{
-                text: array.categoryId,
-                style: 'tableHeader',
-                alignment: 'right',
+                text: array.title,
+                colSpan: 2,
+                alignment: 'left',
                 bold: true,
                 fontSize: 11,
-              },
+              }, {},
                 {
-                  text: array.name,
-                  style: 'tableHeader',
+                  text: '\n' + (listEvaluations[0] != null ? this.convertDateToString(listEvaluations[0].createDate) : '')
+                    + '\n ',
                   alignment: 'left',
-                  colSpan: program.toUpperCase().includes('JAVA') ? 7 : 6,
                   bold: true,
-                  fontSize: 11,
-                }, {}, {}, {}, {}, {}, program.toUpperCase().includes('JAVA') ? {} : ''];
+                  fontSize: 8,
+                },
+                {
+                  text: '\n' + (listEvaluations[1] != null ? this.convertDateToString(listEvaluations[1].createDate) : '')
+                    + '\n ',
+                  alignment: 'left',
+                  bold: true,
+                  fontSize: 8,
+                },
+                {
+                  text: '\n' + (listEvaluations[2] != null ? this.convertDateToString(listEvaluations[2].createDate) : '')
+                    + '\n ',
+                  alignment: 'left',
+                  bold: true,
+                  fontSize: 8,
+                },
+                {
+                  text: '\n' + (listEvaluations[3] != null ? this.convertDateToString(listEvaluations[3].createDate) : '')
+                    + '\n ',
+                  alignment: 'left',
+                  bold: true,
+                  fontSize: 8,
+                },
+                {
+                  text: '\n' + (listEvaluations[4] != null ? this.convertDateToString(listEvaluations[4].createDate) : '')
+                    + '\n ',
+                  alignment: 'left',
+                  bold: true,
+                  fontSize: 8,
+                },
+                program.toUpperCase().includes('JAVA') ? {
+                  text: '\n' + (listEvaluations[5] != null ? this.convertDateToString(listEvaluations[5].createDate) : '')
+                    + '\n ',
+                  alignment: 'left',
+                  bold: true,
+                  fontSize: 8,
+                } : ''];
+            } else {
+              return [{
+                text: array.title,
+                style: 'tableHeader',
+                colSpan: program.toUpperCase().includes('JAVA') ? 8 : 7,
+                alignment: 'left',
+                bold: true,
+                fontSize: 11,
+              }, {},
+                {}, {}, {}, {}, {}, program.toUpperCase().includes('JAVA') ? {} : ''];
             }
-            return [
-              {
-                text: array.skillId,
-                alignment: 'right',
-                fontSize: 10,
-              },
+          } else if (array.categoryId != undefined) {
+            return [{
+              text: array.categoryId,
+              style: 'tableHeader',
+              alignment: 'right',
+              bold: true,
+              fontSize: 11,
+            },
               {
                 text: array.name,
+                style: 'tableHeader',
                 alignment: 'left',
-                fontSize: 10,
-              },
-              {
-                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
-                alignment: 'left',
-                fontSize: 10,
-              },
-              {
-                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
-                alignment: 'left',
-                fontSize: 10,
-              },
-              {
-                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
-                alignment: 'left',
-                fontSize: 10,
-              },
-              {
-                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
-                alignment: 'left',
-                fontSize: 10,
-              },
-              {
-                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
-                alignment: 'left',
-                fontSize: 10,
-              },
-              program.toUpperCase().includes('JAVA') ? {
-                text: array.evaluations != null ? ('\n' + array.evaluations.evaluation + '\n ') : '',
-                alignment: 'left',
-                fontSize: 10,
-              } : ''
-            ];
-          })
-        ],
-      }
-    });
+                colSpan: program.toUpperCase().includes('JAVA') ? 7 : 6,
+                bold: true,
+                fontSize: 11,
+              }, {}, {}, {}, {}, {}, program.toUpperCase().includes('JAVA') ? {} : ''];
+          }
+          return [
+            {
+              text: array.skillId,
+              alignment: 'right',
+              fontSize: 10,
+            },
+            {
+              text: array.name,
+              alignment: 'left',
+              fontSize: 10,
+            },
+            {
+              text: array.evaluations1 != null ? ('\n' + array.evaluations1.evaluation + '\n ') : '',
+              alignment: 'center',
+              fontSize: 10,
+            },
+            {
+              text: array.evaluations2 != null ? ('\n' + array.evaluations2.evaluation + '\n ') : '',
+              alignment: 'center',
+              fontSize: 10,
+            },
+            {
+              text: array.evaluations3 != null ? ('\n' + array.evaluations3.evaluation + '\n ') : '',
+              alignment: 'center',
+              fontSize: 10,
+            },
+            {
+              text: array.evaluations4 != null ? ('\n' + array.evaluations4.evaluation + '\n ') : '',
+              alignment: 'center',
+              fontSize: 10,
+            },
+            {
+              text: array.evaluations5 != null ? ('\n' + array.evaluations5.evaluation + '\n ') : '',
+              alignment: 'center',
+              fontSize: 10,
+            },
+            program.toUpperCase().includes('JAVA') ? {
+              text: array.evaluations6 != null ? ('\n' + array.evaluations6.evaluation + '\n ') : '',
+              alignment: 'center',
+              fontSize: 10,
+            } : ''
+          ];
+        })
+      ],
+    }
+  });
 
   buildPortfolioOnlineCourse = () => ({
     table: {

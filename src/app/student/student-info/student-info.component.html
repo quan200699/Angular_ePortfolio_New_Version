@@ -210,7 +210,7 @@
               <!-- /.tab-pane -->
 
               <div class="tab-pane" id="evaluation">
-                <form class="form-horizontal" (ngSubmit)="createEvaluation()">
+                <form class="form-horizontal" (ngSubmit)="createEvaluation(listEvaluations.length)">
                   <div class="form-group row">
                     <label for="inputName" class="col-sm-2 col-form-label">Tên bản đánh giá</label>
                     <div class="col-sm-10">
@@ -281,13 +281,13 @@
                       </a>
                     </td>
                     <td>
-                      {{evaluations.createDate.getUTCDate()}} - {{evaluations.createDate.getUTCMonth() + 1}}
-                      - {{evaluations.createDate.getUTCFullYear()}}
+                      {{convertDateToString(evaluations.createDate)}}
                     </td>
                     <td *ngIf="hasRoleAdmin">
                       <div class="row">
                         <div class="col-4">
-                          <a (click)="generatePdf('open',student, evaluations)" class="btn btn-block btn-success"
+                          <a (click)="generatePdf('open',student, evaluations, listEvaluations)"
+                             class="btn btn-block btn-success"
                              style="color: white">
                             <i class="fas fa-file-export"></i>
                           </a>

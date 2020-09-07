@@ -39,11 +39,11 @@ export class EvaluationsInfoComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
       this.id = +paramMap.get('id');
       this.getEvaluation(this.id);
+      this.getAllOutcomeByTemplate(this.id);
     });
   }
 
   ngOnInit() {
-    this.getAllOutcome();
     this.getAllCategory();
     this.getAllSkill();
   }
@@ -55,22 +55,37 @@ export class EvaluationsInfoComponent implements OnInit {
     });
   }
 
-  getAllOutcome() {
-    this.outcomeService.getAllOutcome().subscribe(listOutcome => {
-      this.listOutcome = listOutcome;
-      for (let i = 0; i < listOutcome.length; i++) {
-        this.evaluationOutcomeChoice[i] = null;
+  getEvaluationToPromise(id) {
+    return this.evaluationService.getEvaluations(id).toPromise();
+  }
+
+  async getAllOutcomeByTemplate(id) {
+    let evaluation = await this.getEvaluationToPromise(id);
+    if (evaluation.student != null) {
+      if (evaluation.student.classes != null) {
+        if (evaluation.student.classes.module != null) {
+          if (evaluation.student.classes.module.program != null) {
+            let programName = evaluation.student.classes.module.program.name;
+            let templateId = programName.toUpperCase().includes('JAVA') ? 1 : 2;
+            this.outcomeService.getAllOutcomeByTemplate(templateId).subscribe(listOutcome => {
+              this.listOutcome = listOutcome;
+              for (let i = 0; i < listOutcome.length; i++) {
+                this.evaluationOutcomeChoice[i] = null;
+              }
+              this.listOutcome.map(async outcome => {
+                outcome.categories = await this.getAllCategoryByOutcome(outcome.id);
+                outcome.categories.map(async category => {
+                  category.skills = await this.getAllSkillByCategory(category.id);
+                  category.skills.map(async skill => {
+                    skill.evaluations = await this.getEvaluationDetailByEvaluationAndSkill(this.id, skill.id);
+                  });
+                });
+              });
+            });
+          }
+        }
       }
-      this.listOutcome.map(async outcome => {
-        outcome.categories = await this.getAllCategoryByOutcome(outcome.id);
-        outcome.categories.map(async category => {
-          category.skills = await this.getAllSkillByCategory(category.id);
-          category.skills.map(async skill => {
-            skill.evaluations = await this.getEvaluationDetailByEvaluationAndSkill(this.id, skill.id);
-          });
-        });
-      });
-    });
+    }
   }
 
   getAllCategoryByOutcome(id: number) {
@@ -201,7 +216,6 @@ export class EvaluationsInfoComponent implements OnInit {
     this.evaluationChoice = null;
     this.evaluationCategoryChoice = [];
     this.evaluationOutcomeChoice = [];
-    this.getAllOutcome();
   }
 
   getEvaluationDetailByEvaluationAndSkill(id: number, skillId: number) {
