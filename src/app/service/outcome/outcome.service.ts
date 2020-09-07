@@ -42,4 +42,8 @@ export class OutcomeService {
   getAllCategoryByOutcome(id: number): Observable<Category[]> {
     return this.http.get<Category[]>(API_URL + `/outcomes/${id}/categories`);
   }
+
+  getAllOutcomeByTemplate(id: number): Observable<Outcome[]> {
+    return this.http.get<Outcome[]>(API_URL + `/templates/${id}/outcomes`);
+  }
 }

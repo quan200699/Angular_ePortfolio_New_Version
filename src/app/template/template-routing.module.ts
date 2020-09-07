@@ -17,7 +17,11 @@ const routes: Routes = [
   {
     path: 'edit/:id',
     component: TemplateEditComponent
-  }
+  },
+  {
+    path: 'info/:id',
+    component: TemplateEditComponent
+  },
 ];
 
 @NgModule({
