@@ -257,6 +257,9 @@ export class StudentInfoComponent implements OnInit {
         this.notificationService.showSuccessMessage('Đánh giá thành công!');
         this.evaluations = {};
         this.description = {};
+        this.evaluationService.getAllEvaluationsByStudent(this.id).subscribe((listEvaluations) => {
+          this.listEvaluations = listEvaluations;
+        });
       }, () => {
         this.notificationService.showErrorMessage('Đánh giá thất bại!');
       });
