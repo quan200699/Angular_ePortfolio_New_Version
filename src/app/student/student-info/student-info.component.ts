@@ -244,7 +244,8 @@ export class StudentInfoComponent implements OnInit {
     return this.studentService.getStudent(id).toPromise();
   }
 
-  async createEvaluation() {
+  async createEvaluation(size) {
+    let isValid = true;
     let description = await this.createDescription(this.description);
     if (description != null) {
       this.evaluations.description = {
@@ -253,16 +254,41 @@ export class StudentInfoComponent implements OnInit {
       this.evaluations.student = {
         id: this.id
       };
-      this.evaluationService.createDescription(this.evaluations).subscribe(() => {
-        this.notificationService.showSuccessMessage('Đánh giá thành công!');
-        this.evaluations = {};
-        this.description = {};
-        this.evaluationService.getAllEvaluationsByStudent(this.id).subscribe((listEvaluations) => {
-          this.listEvaluations = listEvaluations;
+      let student = await this.getStudentToPromise(this.id);
+      if (student.classes != null) {
+        if (student.classes.module != null) {
+          if (student.classes.module.program != null) {
+            let programName = student.classes.module.program.name;
+            if (programName.toUpperCase().includes('JAVA')) {
+              if (size == 6) {
+                isValid = false;
+              }
+            } else if (programName.toUpperCase().includes('PHP')) {
+              if (size == 5) {
+                isValid = false;
+              }
+            } else {
+              isValid = false;
+            }
+          }
+        }
+      } else {
+        isValid = false;
+      }
+      if (isValid) {
+        this.evaluationService.createDescription(this.evaluations).subscribe(() => {
+          this.notificationService.showSuccessMessage('Đánh giá thành công!');
+          this.evaluations = {};
+          this.description = {};
+          this.evaluationService.getAllEvaluationsByStudent(this.id).subscribe((listEvaluations) => {
+            this.listEvaluations = listEvaluations;
+          });
+        }, () => {
+          this.notificationService.showErrorMessage('Đánh giá thất bại!');
         });
-      }, () => {
-        this.notificationService.showErrorMessage('Đánh giá thất bại!');
-      });
+      }
+    } else {
+      this.notificationService.showErrorMessage('Đánh giá thất bại!');
     }
   }
 
